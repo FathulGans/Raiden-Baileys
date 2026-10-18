@@ -2,6 +2,19 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.1.2] - 2026-10-18
+
+### Ditambahkan
+- API socket baru (disamakan dengan Baileys rc14): `updateMessagesPrivacy`, `updateCallPrivacy`, `updateDisableLinkPreviewsPrivacy`, `getBotListV2`, `fetchDisappearingDuration(...jids)`, `createCallLink(type, event?, timeoutMs?)`, `updateMemberLabel(jid, label)`, `issuePrivacyTokens(jids, timestamp?)`, `newsletterUpdate(jid, updates)`.
+- API socket baru (disamakan dengan Baileys rc14): `addOrEditContact(jid, contact)`, `removeContact(jid)`, `addLabel(jid, { id, name, color, deleted })`, `addOrEditQuickReply({ shortcut, message })`, `removeQuickReply(timestamp)`.
+- `chatModificationToAppPatch` mendukung `contact`, `addLabel`, `quickReply`, dan `disableLinkPreviews`; sinkronisasi app-state memancarkan event `settings.update` untuk pengaturan link preview.
+- Tes baru: `test/chat-modify-step2.test.js`, `test/api-step3.test.js`, `test/api-step3b.test.js` (memakai sock palsu).
+
+### Diperbaiki
+- `WAProto/index.js` diubah dari ESM ke CommonJS. Sebelumnya file ini berformat ESM (`import`/`export`) sementara seluruh `lib/` memakai `require`, sehingga di Node 20 sebelum 20.19 paket gagal dimuat. Kini berjalan di semua Node 20+.
+- `fluent-ffmpeg` dipakai di `lib/Utils/MessageBuilder.js` dan `messages-media.js` tetapi **tidak tercantum di `package.json`**, sehingga pada instalasi baru `require('raiden-baileys')` bisa gagal dengan "Cannot find module". Kini dicantumkan di `dependencies`.
+- `MessageBuilder.js` memuat `sharp` dan `fluent-ffmpeg` di baris paling atas padahal `sharp` bersifat opsional. Kini keduanya dimuat saat dibutuhkan, dengan pesan error yang jelas jika belum terpasang.
+
 ## [2.1.1] - 2026-10-18
 
 ### Diubah

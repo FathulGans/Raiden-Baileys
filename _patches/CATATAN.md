@@ -49,6 +49,16 @@ Sudah diterapkan di pohon ini (tidak perlu menjalankan patch lagi):
    Tes: node test/tx-step2.test.js (pakai stub Mutex). libsignal.js rc14 membungkus operasi per-jid dalam transaksi
    (belum dibawa ke fork ini).
 
+11. Tahap 2 (API socket): chats.js + chat-utils.js: addOrEditContact, removeContact, addLabel, addOrEditQuickReply,
+   removeQuickReply (star sudah ada). Tes: node test/chat-modify-step2.test.js. Belum diuji ke server WhatsApp sungguhan.
+12. Tahap 3 (API socket): chats.js: updateMessagesPrivacy, updateCallPrivacy, updateDisableLinkPreviewsPrivacy,
+   getBotListV2, fetchDisappearingDuration, createCallLink; messages-send.js: updateMemberLabel (setLabelGroup lama
+   tetap ada), issuePrivacyTokens (getPrivacyTokens lama tetap ada); newsletter.js: newsletterUpdate; chat-utils:
+   disableLinkPreviews + event settings.update. Tes: api-step3, api-step3b (sock palsu, tanpa server WhatsApp).
+   Perbaikan paket: fluent-ffmpeg dicantumkan di package.json; sharp & fluent-ffmpeg di MessageBuilder dimuat lazy.
+   Belum: communities, mex, identity-change-handler, tc-token-utils, offline-node-processor, stanza-ack,
+   sync-action-utils, reporting-utils, USyncUsernameProtocol.
+
 Tombol pengaman: makeWASocket({ lidSessionMigration: false }) mematikan langkah 4.
 Tes: node test/lid-step1.test.js && node test/lid-step3.test.js && node test/lid-step4.test.js
 
@@ -58,4 +68,4 @@ Belum dilakukan / belum teruji:
 - Sender key grup belum dimigrasi ke LID.
 - (selesai) WABinary/constants + DICT_VERSION sudah sama dengan rc14; domainType hosted 128/129 sudah dicek terhadap rc14.
 - Versi WA di lib/Defaults/baileys-version.json sengaja TIDAK disamakan (punya fork lebih baru dari rc14).
-- engine-requirements.js masih ">=20"; WAProto ESM butuh Node 22.12+ (atau 20.19+).
+- (selesai) WAProto/index.js kini CommonJS, jadi Node 20.0+ cukup (engine-requirements.js ">=20" sudah sesuai).

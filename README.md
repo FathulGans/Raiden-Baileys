@@ -35,6 +35,8 @@ Dirancang agar ringan, cepat, dan mudah digunakan, serta mendukung fitur-fitur t
 - Product message
 - Payment request message
 - Group & chat management
+- Privasi pesan/panggilan, call link, daftar bot, member label grup, `newsletterUpdate`
+- Kontak, label, dan quick reply (`addOrEditContact`, `removeContact`, `addLabel`, `addOrEditQuickReply`, `removeQuickReply`)
 - Multi-device support
 - Dukungan LID: pemetaan PN ↔ LID persisten, sesi Signal kanonik LID
 - Retry manager: cache pesan terkirim & auto session recreation
@@ -55,7 +57,7 @@ Atau langsung dari GitHub:
 npm install github:<username>/<repo>
 ```
 
-> Butuh **Node.js 20+** (disarankan 22.12+ atau 20.19+ karena WAProto berformat ESM).
+> Butuh **Node.js 20+**. Fitur audio/video (thumbnail, waveform, konversi) membutuhkan **ffmpeg** terpasang di sistem.
 
 ---
 
@@ -96,6 +98,9 @@ node test/lid-step4.test.js
 node test/wabinary-step1.test.js
 node test/tx-step2.test.js
 node test/decode-step4.test.js
+node test/chat-modify-step2.test.js
+node test/api-step3.test.js
+node test/api-step3b.test.js
 ```
 
 > Library ini **belum diuji** dengan koneksi WhatsApp sungguhan. Jika login gagal, periksa `DICT_VERSION` / token WABinary terlebih dahulu.
@@ -103,6 +108,19 @@ node test/decode-step4.test.js
 ---
 
 ## Changelog
+
+### [2.1.2] - 2026-10-18
+
+#### Ditambahkan
+- API socket baru (disamakan dengan Baileys rc14): `updateMessagesPrivacy`, `updateCallPrivacy`, `updateDisableLinkPreviewsPrivacy`, `getBotListV2`, `fetchDisappearingDuration(...jids)`, `createCallLink(type, event?, timeoutMs?)`, `updateMemberLabel(jid, label)`, `issuePrivacyTokens(jids, timestamp?)`, `newsletterUpdate(jid, updates)`.
+- API socket baru (disamakan dengan Baileys rc14): `addOrEditContact(jid, contact)`, `removeContact(jid)`, `addLabel(jid, { id, name, color, deleted })`, `addOrEditQuickReply({ shortcut, message })`, `removeQuickReply(timestamp)`.
+- `chatModificationToAppPatch` mendukung `contact`, `addLabel`, `quickReply`, dan `disableLinkPreviews`; sinkronisasi app-state memancarkan event `settings.update` untuk pengaturan link preview.
+- Tes baru: `test/chat-modify-step2.test.js`, `test/api-step3.test.js`, `test/api-step3b.test.js` (memakai sock palsu).
+
+#### Diperbaiki
+- `WAProto/index.js` diubah dari ESM ke CommonJS. Sebelumnya file ini berformat ESM (`import`/`export`) sementara seluruh `lib/` memakai `require`, sehingga di Node 20 sebelum 20.19 paket gagal dimuat. Kini berjalan di semua Node 20+.
+- `fluent-ffmpeg` dipakai di `lib/Utils/MessageBuilder.js` dan `messages-media.js` tetapi **tidak tercantum di `package.json`**, sehingga pada instalasi baru `require('raiden-baileys')` bisa gagal dengan "Cannot find module". Kini dicantumkan di `dependencies`.
+- `MessageBuilder.js` memuat `sharp` dan `fluent-ffmpeg` di baris paling atas padahal `sharp` bersifat opsional. Kini keduanya dimuat saat dibutuhkan, dengan pesan error yang jelas jika belum terpasang.
 
 ### [2.1.1] - 2026-10-18
 
@@ -161,6 +179,14 @@ node test/decode-step4.test.js
 
 ---
 
+## Contributors
+
+- Kaze ([FathulGans](https://github.com/FathulGans))
+- [Kelvin](https://github.com/vfmarket24-alt)
+- Tayro
+
+---
+
 ## License
 
-MIT © Kaze
+MIT © Kaze, Kelvin, Tayro
