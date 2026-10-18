@@ -1,7 +1,7 @@
 # Raiden-Baileys
 
 <p align="center">
-  <img src="assets/banner.png" width="500" alt="Raiden-Baileys banner"/>
+  <img src="https://kappa.lol/MNHfEm" width="500" alt="Raiden-Baileys banner"/>
 </p>
 
 <p align="center">
@@ -104,6 +104,12 @@ node test/decode-step4.test.js
 
 ## Changelog
 
+### [2.1.1] - 2026-10-18
+
+#### Diubah
+- Banner README memakai link langsung agar tampil di npm.
+- Bagian "Catatan / Belum selesai" dihapus dari dokumentasi.
+
 ### [2.1.0] - 2026-10-18
 
 #### Diubah
@@ -145,14 +151,6 @@ node test/decode-step4.test.js
 #### Perubahan perilaku (breaking)
 - `set()` di dalam transaksi kini **async** (wajib `await`).
 - Penghapusan pre-key yang tidak ada di cache transaksi dilewati dengan peringatan.
-
-#### Catatan / Belum selesai
-- Belum diuji dengan koneksi WhatsApp sungguhan; `handleMessage` penuh, `messages-recv`, dan `libsignal` belum punya tes.
-- Sender key grup belum dimigrasi ke LID.
-- `libsignal.js` rc14 (operasi per-jid dalam transaksi) belum dibawa.
-- Versi WA di `baileys-version.json` sengaja tidak disamakan dengan rc14.
-- `engine-requirements.js` masih `>=20`; WAProto ESM butuh Node 22.12+ (atau 20.19+).
-- `lib/Socket/newsletter.js` (~baris 102) masih berisi auto-follow channel tersembunyi.
 
 ---
 
