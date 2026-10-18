@@ -69,3 +69,11 @@ Belum dilakukan / belum teruji:
 - (selesai) WABinary/constants + DICT_VERSION sudah sama dengan rc14; domainType hosted 128/129 sudah dicek terhadap rc14.
 - Versi WA di lib/Defaults/baileys-version.json sengaja TIDAK disamakan (punya fork lebih baru dari rc14).
 - (selesai) WAProto/index.js kini CommonJS, jadi Node 20.0+ cukup (engine-requirements.js ">=20" sudah sesuai).
+13. Tahap 4 (port modul rc14, ESM -> CJS): Socket/communities.js (di atas registration; socket teratas sekarang
+   makeCommunitiesSocket), Socket/mex.js, Utils/identity-change-handler.js, offline-node-processor.js, stanza-ack.js,
+   sync-action-utils.js, tc-token-utils.js, reporting-utils.js, WAUSync/Protocols/USyncUsernameProtocol.js,
+   generics.isStringNullOrEmpty. Dipasang ke messages-recv: ack (buildAckStanza), identity change (handleIdentityChange),
+   offline processor. WABinary di modul Utils baru diambil lazy karena WABinary/generic-utils memuat ../Utils (sirkular).
+   Tes: node test/rc14-modules.test.js (sock palsu). Belum diuji ke server WhatsApp sungguhan.
+   Belum dipasang ke alur kirim/terima: tc-token-utils (tctoken), reporting-utils (reporting token), sync-action-utils
+   (contactAction di app-state sync) - baru tersedia sebagai util yang diekspor.

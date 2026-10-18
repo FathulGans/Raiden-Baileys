@@ -1,6 +1,6 @@
 {
     "name": "raiden-baileys",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "Raiden-Baileys, baileys modifikasi by kaze",
     "keywords": [
         "whatsapp",
@@ -22,6 +22,7 @@
     "files": [
         "lib/*",
         "WAProto/*.js",
+        "WAProto/*.d.ts",
         "engine-requirements.js"
     ],
     "scripts": {

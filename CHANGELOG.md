@@ -2,6 +2,24 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.1.3] - 2026-10-18
+
+### Ditambahkan
+- Communities (dari Baileys rc14): `communityMetadata`, `communityCreate`, `communityLeave`, `communityFetchAllParticipating`, `communityCreateGroup`, `communityLinkGroup`, `communityUnlinkGroup`, `communityFetchLinkedGroups`, pengaturan komunitas, undangan, dan permintaan bergabung. Socket teratas kini `makeCommunitiesSocket`; `extractCommunityMetadata` diekspor.
+- `lib/Socket/mex.js` (`executeWMexQuery`), `USyncUsernameProtocol`, `Utils/sync-action-utils` (`processContactAction`, `emitSyncActionResults`), `Utils/tc-token-utils`, `Utils/reporting-utils`, `isStringNullOrEmpty`.
+- Tes baru: `test/rc14-modules.test.js`.
+
+### Diubah
+- `messages-recv`: ack kini dibangun `buildAckStanza` (Utils/stanza-ack) seperti rc14.
+- `messages-recv`: notifikasi perubahan identitas kini ditangani `handleIdentityChange` (sesi disegarkan, dengan debounce, dilewati untuk perangkat pendamping, akun sendiri, dan pemrosesan offline). Sebelumnya hanya dicatat di log.
+- `messages-recv`: pemroses node offline memakai `makeOfflineNodeProcessor` (error handler tidak lagi menghentikan antrean, event loop diberi jeda tiap 10 node).
+- Banner konsol diganti dengan logo Raiden-Baileys (ANSI pixel art 60 kolom, muat di layar panel HP), tanpa box, dan teks info dirapikan.
+- "Recode by" kini mencantumkan Kaze, Kelvin, Tayro.
+- Lisensi, author, dan daftar contributors di `package.json`, `LICENSE`, dan README diperbarui (Kaze, Kelvin, Tayro).
+
+### Diperbaiki
+- Types TypeScript: `package.json` menunjuk `lib/index.d.ts` yang tidak ada, dan `WAProto/index.d.ts` tidak ikut terpublish. Kini `lib/index.d.ts` ditambahkan (makeWASocket, auth, JID utils, helper pesan, re-export `proto`) dan `WAProto/*.d.ts` dimasukkan ke `files`.
+
 ## [2.1.2] - 2026-10-18
 
 ### Ditambahkan
