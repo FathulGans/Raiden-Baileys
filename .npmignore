@@ -1,0 +1,13 @@
+node_modules/
+test/
+_patches/
+assets/
+/session/
+/sessions/
+/auth/
+/auth_info*/
+creds.json
+.env
+*.log
+.git/
+.gitignore

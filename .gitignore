@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+
+# sesi & kredensial WhatsApp (JANGAN di-upload)
+/session/
+/sessions/
+/auth/
+/auth_info*/
+creds.json
+
+# env & log
+.env
+*.log
+npm-debug.log*
+
+# sistem
+.DS_Store
+Thumbs.db
