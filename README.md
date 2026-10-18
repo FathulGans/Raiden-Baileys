@@ -1,7 +1,7 @@
 # Raiden-Baileys
 
 <p align="center">
-  <img src="https://kappa.lol/MNHfEm" width="300" alt="Raiden-Baileys banner"/>
+  <img src="assets/banner.png" width="500" alt="Raiden-Baileys banner"/>
 </p>
 
 <p align="center">
@@ -103,6 +103,14 @@ node test/decode-step4.test.js
 ---
 
 ## Changelog
+
+### [2.1.0] - 2026-10-18
+
+#### Diubah
+- Proyek diganti nama menjadi **Raiden-Baileys** (paket `raiden-baileys`).
+- Banner konsol diganti dengan logo Raiden-Baileys (pixel art dua baris) dan kotak banner dirapikan.
+- Banner README dipindah ke `assets/banner.png`.
+- Versi paket naik ke 2.1.0.
 
 ### [2.0.0] - 2026-10-18
 

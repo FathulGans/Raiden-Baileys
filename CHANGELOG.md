@@ -2,6 +2,14 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.1.0] - 2026-10-18
+
+### Diubah
+- Proyek diganti nama menjadi **Raiden-Baileys** (paket `raiden-baileys`).
+- Banner konsol diganti dengan logo Raiden-Baileys (pixel art dua baris) dan kotak banner dirapikan.
+- Banner README dipindah ke `assets/banner.png`.
+- Versi paket naik ke 2.1.0.
+
 ## [2.0.0] - 2026-10-18
 
 ### Ditambahkan
