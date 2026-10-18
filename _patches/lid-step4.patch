@@ -1,0 +1,104 @@
+--- a/lib/Signal/libsignal.js
++++ b/lib/Signal/libsignal.js
+@@ -41,13 +41,22 @@
+ const sender_key_record_1 = require("./Group/sender-key-record");
+ const Group_1 = require("./Group");
+ const lid_mapping_1 = require("./lid-mapping");
++const lid_session_1 = require("./lid-session");
+ const noopLogger = { trace() { }, debug() { }, info() { }, warn() { }, error() { } };
+-function makeLibSignalRepository(auth, logger, onNewMappings) {
++function makeLibSignalRepository(auth, logger, onNewMappings, options = {}) {
+     const storage = signalStorage(auth);
+     const lidMapping = new lid_mapping_1.LIDMappingStore(auth.keys, logger || noopLogger, undefined, onNewMappings);
++    const lidSessions = (0, lid_session_1.makeLidSessionResolver)({
++        keys: auth.keys,
++        lidMapping,
++        logger: logger || noopLogger,
++        toAddress: (jid) => jidToSignalProtocolAddress(jid).toString(),
++        enabled: options.migrateSessionsToLid !== false
++    });
+     return {
+         lidMapping,
+         storeLIDPNMappings: (pairs) => lidMapping.storeLIDPNMappings(pairs),
++        resolveSessionAddress: async (jid) => jidToSignalProtocolAddress(await lidSessions.resolveAddressJid(jid)).toString(),
+         decryptGroupMessage({ group, authorJid, msg }) {
+             const senderName = jidToSignalSenderKeyName(group, authorJid);
+             const cipher = new Group_1.GroupCipher(storage, senderName);
+@@ -68,7 +77,7 @@
+             await builder.process(senderName, senderMsg);
+         },
+         async decryptMessage({ jid, type, ciphertext }) {
+-            const addr = jidToSignalProtocolAddress(jid);
++            const addr = jidToSignalProtocolAddress(await lidSessions.resolveAddressJid(jid));
+             const session = new libsignal.SessionCipher(storage, addr);
+             let result;
+             switch (type) {
+@@ -84,7 +93,7 @@
+             return result;
+         },
+         async encryptMessage({ jid, data }) {
+-            const addr = jidToSignalProtocolAddress(jid);
++            const addr = jidToSignalProtocolAddress(await lidSessions.resolveAddressJid(jid));
+             const cipher = new libsignal.SessionCipher(storage, addr);
+             const { type: sigType, body } = await cipher.encrypt(data);
+             const type = sigType === 3 ? 'pkmsg' : 'msg';
+@@ -107,7 +116,7 @@
+             };
+         },
+         async injectE2ESession({ jid, session }) {
+-            const cipher = new libsignal.SessionBuilder(storage, jidToSignalProtocolAddress(jid));
++            const cipher = new libsignal.SessionBuilder(storage, jidToSignalProtocolAddress(await lidSessions.resolveAddressJid(jid)));
+             await cipher.initOutgoing(session);
+         },
+         jidToSignalProtocolAddress(jid) {
+--- a/lib/Socket/socket.js
++++ b/lib/Socket/socket.js
+@@ -48,7 +48,7 @@
+         for (const pair of pairs) {
+             ev.emit('lid-mapping.update', pair);
+         }
+-    });
++    }, { migrateSessionsToLid: config.lidSessionMigration !== false });
+     let lastDateRecv;
+     let epoch = 1;
+     let keepAliveReq;
+--- a/lib/Socket/messages-send.js
++++ b/lib/Socket/messages-send.js
+@@ -180,14 +180,13 @@
+             jidsRequiringFetch = jids;
+         }
+         else {
+-            const addrs = jids.map(jid => (signalRepository
+-                .jidToSignalProtocolAddress(jid)));
++            const addrs = await Promise.all(jids.map(jid => signalRepository.resolveSessionAddress
++                ? signalRepository.resolveSessionAddress(jid)
++                : signalRepository.jidToSignalProtocolAddress(jid)));
+             const sessions = await authState.keys.get('session', addrs);
+-            for (const jid of jids) {
+-                const signalId = signalRepository
+-                    .jidToSignalProtocolAddress(jid);
+-                if (!sessions[signalId]) {
+-                    jidsRequiringFetch.push(jid);
++            for (let i = 0; i < jids.length; i++) {
++                if (!sessions[addrs[i]]) {
++                    jidsRequiringFetch.push(jids[i]);
+                 }
+             }
+         }
+--- a/lib/Socket/usync.js
++++ b/lib/Socket/usync.js
+@@ -74,6 +74,14 @@
+             return ((res && res.list) || []).filter((i) => i.id && i.lid).map((i) => ({ pn: i.id, lid: i.lid }));
+         });
+     }
++    // pemetaan akun sendiri (agar sesi antar-device sendiri konsisten di alamat LID)
++    sock.ev.on('connection.update', ({ connection }) => {
++        if (connection !== 'open' || !sock.signalRepository || !sock.signalRepository.storeLIDPNMappings) return;
++        const me = sock.authState && sock.authState.creds && sock.authState.creds.me;
++        if (me && me.id && me.lid) {
++            sock.signalRepository.storeLIDPNMappings([{ lid: me.lid, pn: me.id }]).catch(() => { });
++        }
++    });
+     return {
+         ...sock,
+         executeUSyncQuery,

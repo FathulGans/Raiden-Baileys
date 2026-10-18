@@ -1,0 +1,153 @@
+--- a/lib/Signal/libsignal.js
++++ b/lib/Signal/libsignal.js
+@@ -40,9 +40,14 @@
+ const sender_key_name_1 = require("./Group/sender-key-name");
+ const sender_key_record_1 = require("./Group/sender-key-record");
+ const Group_1 = require("./Group");
+-function makeLibSignalRepository(auth) {
++const lid_mapping_1 = require("./lid-mapping");
++const noopLogger = { trace() { }, debug() { }, info() { }, warn() { }, error() { } };
++function makeLibSignalRepository(auth, logger, onNewMappings) {
+     const storage = signalStorage(auth);
++    const lidMapping = new lid_mapping_1.LIDMappingStore(auth.keys, logger || noopLogger, undefined, onNewMappings);
+     return {
++        lidMapping,
++        storeLIDPNMappings: (pairs) => lidMapping.storeLIDPNMappings(pairs),
+         decryptGroupMessage({ group, authorJid, msg }) {
+             const senderName = jidToSignalSenderKeyName(group, authorJid);
+             const cipher = new Group_1.GroupCipher(storage, senderName);
+--- a/lib/Socket/socket.js
++++ b/lib/Socket/socket.js
+@@ -44,7 +44,11 @@
+     const { creds } = authState;
+     // add transaction capability
+     const keys = (0, Utils_1.addTransactionCapability)(authState.keys, logger, transactionOpts);
+-    const signalRepository = makeSignalRepository({ creds, keys });
++    const signalRepository = makeSignalRepository({ creds, keys }, logger, (pairs) => {
++        for (const pair of pairs) {
++            ev.emit('lid-mapping.update', pair);
++        }
++    });
+     let lastDateRecv;
+     let epoch = 1;
+     let keepAliveReq;
+--- a/lib/Socket/usync.js
++++ b/lib/Socket/usync.js
+@@ -3,6 +3,7 @@
+ exports.makeUSyncSocket = void 0;
+ const boom_1 = require("@hapi/boom");
+ const WABinary_1 = require("../WABinary");
++const WAUSync_1 = require("../WAUSync");
+ const socket_1 = require("./socket");
+ const makeUSyncSocket = (config) => {
+     const sock = (0, socket_1.makeSocket)(config);
+@@ -62,6 +63,17 @@
+         const result = await query(iq);
+         return usyncQuery.parseUSyncQueryResult(result);
+     };
++    // cadangan PN -> LID lewat USync (dipakai LIDMappingStore bila pemetaan belum ada)
++    if (sock.signalRepository && sock.signalRepository.lidMapping) {
++        sock.signalRepository.lidMapping.setPnToLIDFunc(async (jids) => {
++            const q = new WAUSync_1.USyncQuery().withContactProtocol().withLIDProtocol();
++            for (const jid of jids) {
++                q.withUser(new WAUSync_1.USyncUser().withPhone(`+${jid.split('@')[0].split(':')[0]}`));
++            }
++            const res = await executeUSyncQuery(q);
++            return ((res && res.list) || []).filter((i) => i.id && i.lid).map((i) => ({ pn: i.id, lid: i.lid }));
++        });
++    }
+     return {
+         ...sock,
+         executeUSyncQuery,
+--- a/lib/Socket/messages-recv.js
++++ b/lib/Socket/messages-recv.js
+@@ -13,6 +13,7 @@
+ const Utils_1 = require("../Utils");
+ const make_mutex_1 = require("../Utils/make-mutex");
+ const WABinary_1 = require("../WABinary");
++const lid_mapping_1 = require("../Signal/lid-mapping");
+ const groups_1 = require("./groups");
+ const messages_send_1 = require("./messages-send");
+ const makeMessagesRecvSocket = (config) => {
+@@ -794,6 +795,13 @@
+                 placeholderResendCache.del(node.attrs.id);
+             }
+         }
++        // simpan pemetaan LID<->PN dari atribut stanza SEBELUM dekripsi
++        try {
++            await signalRepository.storeLIDPNMappings((0, lid_mapping_1.extractLidPnPairs)(node.attrs));
++        }
++        catch (err) {
++            logger.warn({ err }, 'gagal menyimpan pemetaan LID dari stanza');
++        }
+         const { fullMessage: msg, category, author, decrypt } = (0, Utils_1.decryptMessageNode)(node, authState.creds.me.id, authState.creds.me.lid || '', signalRepository, logger);
+         if (response && ((_a = msg === null || msg === void 0 ? void 0 : msg.messageStubParameters) === null || _a === void 0 ? void 0 : _a[0]) === Utils_1.NO_MESSAGE_FOUND_ERROR_TEXT) {
+             msg.messageStubParameters = [Utils_1.NO_MESSAGE_FOUND_ERROR_TEXT, response];
+--- a/lib/Socket/chats.js
++++ b/lib/Socket/chats.js
+@@ -895,6 +895,7 @@
+                 ev,
+                 creds: authState.creds,
+                 keyStore: authState.keys,
++                signalRepository: sock.signalRepository,
+                 logger,
+                 options: config.options,
+                 getMessage: config.getMessage,
+--- a/lib/Utils/history.js
++++ b/lib/Utils/history.js
+@@ -75,10 +75,14 @@
+             }
+             break;
+     }
++    const lidPnMappings = (item.phoneNumberToLidMappings || [])
++        .filter((m) => m.pnJid && m.lidJid)
++        .map((m) => ({ lid: m.lidJid, pn: m.pnJid }));
+     return {
+         chats,
+         contacts,
+         messages,
++        lidPnMappings,
+     };
+ };
+ exports.processHistoryMessage = processHistoryMessage;
+--- a/lib/Utils/process-message.js
++++ b/lib/Utils/process-message.js
+@@ -102,7 +102,7 @@
+     }
+ }
+ exports.decryptPollVote = decryptPollVote;
+-const processMessage = async (message, { shouldProcessHistoryMsg, ev, creds, keyStore, logger, options, getMessage }) => {
++const processMessage = async (message, { shouldProcessHistoryMsg, ev, creds, keyStore, signalRepository, logger, options, getMessage }) => {
+     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+     const meId = creds.me.id;
+     const { accountSettings } = creds;
+@@ -157,9 +157,29 @@
+                         ]
+                     });
+                     const data = await (0, history_1.downloadAndProcessHistorySyncNotification)(histNotification, options);
++                    if (signalRepository && data.lidPnMappings && data.lidPnMappings.length) {
++                        await signalRepository.storeLIDPNMappings(data.lidPnMappings);
++                    }
+                     ev.emit('messaging-history.set', { ...data, isLatest });
+                 }
+                 break;
++            case WAProto_1.proto.Message.ProtocolMessage.Type.LID_MIGRATION_MAPPING_SYNC: {
++                const encoded = protocolMsg.lidMigrationMappingSyncMessage && protocolMsg.lidMigrationMappingSyncMessage.encodedMappingPayload;
++                if (encoded && signalRepository) {
++                    const { pnToLidMappings } = WAProto_1.proto.LIDMigrationMappingSyncPayload.decode(encoded);
++                    const pairs = [];
++                    for (const m of pnToLidMappings || []) {
++                        const lid = m.latestLid || m.assignedLid;
++                        if (m.pn && lid) {
++                            pairs.push({ lid: `${lid.toString()}@lid`, pn: `${m.pn.toString()}@s.whatsapp.net` });
++                        }
++                    }
++                    if (pairs.length) {
++                        await signalRepository.storeLIDPNMappings(pairs);
++                    }
++                }
++                break;
++            }
+             case WAProto_1.proto.Message.ProtocolMessage.Type.APP_STATE_SYNC_KEY_SHARE:
+                 const keys = protocolMsg.appStateSyncKeyShare.keys;
+                 if (keys === null || keys === void 0 ? void 0 : keys.length) {
