@@ -77,3 +77,18 @@ Belum dilakukan / belum teruji:
    Tes: node test/rc14-modules.test.js (sock palsu). Belum diuji ke server WhatsApp sungguhan.
    Belum dipasang ke alur kirim/terima: tc-token-utils (tctoken), reporting-utils (reporting token), sync-action-utils
    (contactAction di app-state sync) - baru tersedia sebagai util yang diekspor.
+14. Port levvleys 2.1.0 (fitur pesan saja): Utils/messages.js generateWAMessageContent diganti versi levvleys (+canonicalUrl
+   fork tetap), helper rich di Utils/rich-message.js, __richEdit dipasang setelah fromObject (di levvleys hilang),
+   generateWAMessage menjalankan editrich via options.conn. messages-send: cabang { album }, edit=2/6 pin/keep,
+   meta polltype, media_id. groups: groupRevokeInviteV4, descTime, linkedParent, participant.lid. jid-utils: alias
+   isJidNewsletter/isJidMetaAi, isJidBot, getBotJid. process-message: event group.join-request.
+   TIDAK dibawa: LID/participant di messages-recv, dedup chats, uploadFile/vid2jpg, auto-join newsletter, branding.
+   Tes: node test/message-extra.test.js (sock palsu). stickerPack: mapping media 'sticker-pack' belum ada.
+15. Port @rennzsync/baileys 10.7.4 (baileys-main, ESM rc14 -> CJS): Utils baru a2ui, anchor-guard, media-processor,
+   rich-carousel, rich-classic, rich-menu, rich-webui, use-sqlite-auth-state (dikonversi otomatis ESM->CJS, isi tidak
+   diubah). Socket/index: opsi AnchorGuard. messages.js: imagePoll, viewOnceV2(Extension), hashImagePollOption,
+   generateWAMessageFromImagePoll. messages-send: flag isSecret/protected/me (filter perangkat di loop 1:1),
+   unwrapStanzaMessage untuk type/mediatype/getButtonType, mediatype ptv/location/sticker_pack/group_history,
+   sock.richMenu/sendA2UI/sendImagePoll. generic-utils: ORDER_RESPONSE_NAME/FLOW_NAME diekspor, biz list.
+   messages-media: execFile ffmpeg, generateProfilePicture(dimensions). Tes: node test/socket-extra.test.js.
+   TIDAK dibawa: versi WA live (top-level await), default hemat RAM, Store mereka.

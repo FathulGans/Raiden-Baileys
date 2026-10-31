@@ -76,6 +76,23 @@ export function isJidGroup(jid: string | undefined): boolean | undefined;
 export function isJidBroadcast(jid: string | undefined): boolean | undefined;
 export function isLidUser(jid: string | undefined): boolean | undefined;
 export function isPnUser(jid: string | undefined): boolean | undefined;
+export function isJidNewsletter(jid: string | undefined): boolean | undefined;
+export function isJidBot(jid: string | undefined): boolean | undefined;
+export function getBotJid(jid: string): string;
+export function toJid(id: string | undefined): string;
+export function setRichMessageConnection<T extends { relayMessage: Function }>(conn: T): T;
+export function useSqliteAuthState(pathOrFolder: string, options?: { fileName?: string; migrateFromFolder?: string; logger?: any }): Promise<{ state: AuthenticationState; saveCreds: () => Promise<void>; db: any; close: () => void }>;
+export function createAnchorGuard(sock: WASocket, options?: AnyObject): { detect(message: AnyObject): { flagged: boolean; reasons: string[] }; stop(): void };
+export function detectBug(message: AnyObject, options?: AnyObject): { flagged: boolean; reasons: string[] };
+export function buildRichMenuMessage(content?: AnyObject): AnyObject;
+export function buildWebuiMessage(options: { html: string; title?: string; botJid?: string; forwardOrigin?: string; responseId?: string }): AnyObject;
+export function sendInlineWebUI(sock: WASocket, jid: string, html: string, title?: string, options?: AnyObject): Promise<{ messageId: string; message: AnyObject }>;
+export function buildCarouselMessage(options: AnyObject): AnyObject;
+export function buildInteractiveMessage(options?: AnyObject): AnyObject;
+export function buildButtonsMessage(options: AnyObject): AnyObject;
+export function buildListMessage(options: AnyObject): AnyObject;
+export class A2UI { constructor(options?: { catalogId?: string; version?: string }); [method: string]: any }
+export function hashImagePollOption(optionName: string, fileSha256?: Uint8Array): string;
 
 export function getContentType(content: proto.IMessage | undefined): string | undefined;
 export function normalizeMessageContent(content: proto.IMessage | null | undefined): proto.IMessage | undefined;
