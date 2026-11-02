@@ -2,6 +2,11 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.1.6] - 2026-11-02
+
+### Diperbaiki
+- Link banner README kini memakai file di repo sendiri (`assets/banner.png`), sehingga tampil di GitHub dan npm.
+
 ## [2.1.5] - 2026-11-02
 
 ### Ditambahkan
