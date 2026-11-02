@@ -1,7 +1,7 @@
 # Raiden-Baileys
 
 <p align="center">
-  <img src="https://kappa.lol/MNHfEm" width="500" alt="Raiden-Baileys banner"/>
+  <img src="https://raw.githubusercontent.com/FathulGans/Raiden-Baileys/main/assets/banner.png" width="500" alt="Raiden-Baileys banner"/>
 </p>
 
 <p align="center">
