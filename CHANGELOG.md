@@ -21,7 +21,7 @@ Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
 ## [2.1.4] - 2026-10-31
 
-### Ditambahkan (port dari levvleys 2.1.0)
+### Ditambahkan
 - Tipe pesan baru di `sendMessage` / `generateWAMessageContent`: `pin`, `keep`, `call` (scheduled call), `paymentInvite`, `ptv`, `order`, `groupInvite`, `event`, `inviteAdmin`, `requestPayment`, `album`, `groupStatus`, `orderStatus`, `buttonsMessage` (termasuk lokasi + thumbnail), `stickerPack`, `richMessage` (teks/kode/tabel/html/gambar/video/produk/post/reels/sumber/saran, `editrich`), `richMessageV2`, `interactiveButtons`, `shop`. Tombol biasa kini mendukung `title`, `contextInfo`, `mentions`.
 - `sendMessage(jid, { album: [{ image }, { video }], caption })`: header album + item media terhubung (`messageAssociation`), jeda antar item lewat config `albumMessageItemDelayMs` (default 0). Format `albumMessage` lama (ClutchHandler) tetap jalan.
 - `sendMessage` mengisi atribut stanza untuk pin (`edit=2`), keep (`edit=6`), node `meta polltype=creation` untuk polling, dan `media_id` dari hasil upload.
@@ -30,17 +30,16 @@ Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 - Grup: `groupRevokeInviteV4(groupJid, invitedJid)`; metadata grup kini berisi `descTime`, `linkedParent`, dan `participants[].lid`.
 - Event `group.join-request` (`{ id, author, participant, action, method }`) saat ada permintaan bergabung grup.
 - Dependensi `fflate` (untuk `stickerPack`). `jimp` dimuat opsional, hanya untuk thumbnail lokasi `buttonsMessage`.
-- Tes baru: `test/levvleys-port.test.js`.
 
-### Diubah (port levvleys)
+### Diubah
 - Polling dengan `selectableCount: 1` dikirim sebagai `pollCreationMessageV3`, `toAnnouncementGroup: true` sebagai `pollCreationMessageV2` (sama dengan Baileys rc14).
 - `normalizeMessageContent` ikut membuka `associatedChildMessage`, `groupStatusMessage`, `groupStatusMessageV2`, dan `botForwardedMessage`.
 
-### Catatan (port levvleys)
+### Catatan
 - `stickerPack`: jenis media `sticker-pack` belum ada di `MEDIA_PATH_MAP` / `MEDIA_HKDF_KEY_MAPPING` (sama seperti di levvleys), jadi upload paket stiker ke server WhatsApp kemungkinan gagal. Belum diuji ke server sungguhan.
 - Tidak dibawa dari levvleys: penggantian alur LID/participant di `messages-recv`, dedup pesan di `chats`, `uploadFile`/`vid2jpg` (upload ke layanan pihak ketiga), auto-join channel di `newsletter`, banner/branding levvleys.
 
-### Ditambahkan (port dari @rennzsync/baileys 10.7.4, "baileys-main")
+### Ditambahkan
 - AnchorGuard (anti force-close): `makeWASocket({ AnchorGuard: true, AnchorGuardConfig: {...} })` memasang `sock.anchorGuard`; ekspor `createAnchorGuard`, `createAntiBugGuard`, `detectBug`, `ANCHORGUARD_DEFAULTS`. Pesan masuk yang terdeteksi bug dihapus (opsional blokir pengirim), pesan keluar yang terdeteksi bug ditolak.
 - `useSqliteAuthState(pathOrFolder, { fileName, migrateFromFolder })`: auth state di satu file SQLite (`node:sqlite`, Node 22.5+), bisa migrasi dari folder `useMultiFileAuthState`.
 - Builder pesan: `buildRichMenuMessage`/`sendRichMenu` dan `sock.richMenu(jid, content)`, `buildWebuiMessage`/`sendInlineWebUI` (HTML inline), `buildInteractiveMessage`/`buildCarouselMessage`/`buildNativeFlowButton`/`sendInteractiveMessage`/`sendCarouselMessage`, `buildButtonsMessage`/`buildListMessage`/`sendClassicMessage`, widget `A2UI` dan `sock.sendA2UI(jid, { a2ui, ... })`.
@@ -50,16 +49,15 @@ Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 - Utilitas media (lazy, butuh `sharp`/`fluent-ffmpeg` bila dipakai): `resizeImage`, `convertToWhatsAppVideo`, `convertToOpusAudio`, `getVideoThumbnail`, `probeMedia`, `getMp4Duration`.
 - `generateProfilePicture(media, { width, height, quality, full })`; `updateProfilePicture` dan `newsletterUpdatePicture` menerima argumen `dimensions` yang sama. Tanpa argumen hasilnya tetap 640x640 quality 50.
 - Ekspor WABinary `ORDER_RESPONSE_NAME`, `FLOW_NAME`.
-- Tes baru: `test/rennz-port.test.js`.
 
-### Diubah (port @rennzsync/baileys)
+### Diubah
 - Node `<biz>` untuk pesan bertombol: tipe ditentukan dari SEMUA tombol native flow (bukan hanya yang pertama), sehingga flow `cta_catalog`, `mpm`, `call_request`, `view_catalog`, `wa_pay_detail`, `send_location` mendapat nama native_flow yang benar; `listMessage` kini memakai `<biz><list type="product_list" v="2"/></biz>` seperti WA Web.
 - Atribut `mediatype` stanza: wrapper (viewOnce, groupStatus, botForwarded, groupMentioned, botInvoke, deviceSent) dibuka dulu; tambahan `ptv`, `location`, `sticker_pack`, `group_history`.
 
-### Diperbaiki (port @rennzsync/baileys)
+### Diperbaiki
 - Thumbnail video via ffmpeg memakai `execFile` (tanpa shell). Sebelumnya `exec` dengan path yang disisipkan ke string perintah: path berspasi gagal dan karakter shell di path bisa dieksekusi.
 
-### Catatan (port @rennzsync/baileys)
+### Catatan
 - Tidak dibawa dari @rennzsync/baileys: ambil versi WA live saat import (`Defaults`, memakai top-level await ESM), perubahan default hemat RAM (`MSG_RETRY`, `syncFullHistory`, `enableRecentMessageCache`), `Store` versi mereka (raiden sudah punya Store sendiri), `whatsapp-rust-bridge`.
 
 ## [2.1.3] - 2026-10-18
@@ -67,7 +65,6 @@ Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 ### Ditambahkan
 - Communities (dari Baileys rc14): `communityMetadata`, `communityCreate`, `communityLeave`, `communityFetchAllParticipating`, `communityCreateGroup`, `communityLinkGroup`, `communityUnlinkGroup`, `communityFetchLinkedGroups`, pengaturan komunitas, undangan, dan permintaan bergabung. Socket teratas kini `makeCommunitiesSocket`; `extractCommunityMetadata` diekspor.
 - `lib/Socket/mex.js` (`executeWMexQuery`), `USyncUsernameProtocol`, `Utils/sync-action-utils` (`processContactAction`, `emitSyncActionResults`), `Utils/tc-token-utils`, `Utils/reporting-utils`, `isStringNullOrEmpty`.
-- Tes baru: `test/rc14-modules.test.js`.
 
 ### Diubah
 - `messages-recv`: ack kini dibangun `buildAckStanza` (Utils/stanza-ack) seperti rc14.
@@ -86,7 +83,6 @@ Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 - API socket baru (disamakan dengan Baileys rc14): `updateMessagesPrivacy`, `updateCallPrivacy`, `updateDisableLinkPreviewsPrivacy`, `getBotListV2`, `fetchDisappearingDuration(...jids)`, `createCallLink(type, event?, timeoutMs?)`, `updateMemberLabel(jid, label)`, `issuePrivacyTokens(jids, timestamp?)`, `newsletterUpdate(jid, updates)`.
 - API socket baru (disamakan dengan Baileys rc14): `addOrEditContact(jid, contact)`, `removeContact(jid)`, `addLabel(jid, { id, name, color, deleted })`, `addOrEditQuickReply({ shortcut, message })`, `removeQuickReply(timestamp)`.
 - `chatModificationToAppPatch` mendukung `contact`, `addLabel`, `quickReply`, dan `disableLinkPreviews`; sinkronisasi app-state memancarkan event `settings.update` untuk pengaturan link preview.
-- Tes baru: `test/chat-modify-step2.test.js`, `test/api-step3.test.js`, `test/api-step3b.test.js` (memakai sock palsu).
 
 ### Diperbaiki
 - `WAProto/index.js` diubah dari ESM ke CommonJS. Sebelumnya file ini berformat ESM (`import`/`export`) sementara seluruh `lib/` memakai `require`, sehingga di Node 20 sebelum 20.19 paket gagal dimuat. Kini berjalan di semua Node 20+.
