@@ -115,9 +115,7 @@ start()
 
 ---
 
-## Fitur dari @levvsync/baileys
-
-Fitur berikut di-port dari [`@levvsync/baileys`](https://www.npmjs.com/package/@levvsync/baileys) 0.0.3 dan disesuaikan dengan internal Raiden.
+## Fitur Pengiriman Lanjutan
 
 ### Private relay
 
@@ -209,6 +207,47 @@ await sock.sendMessage(jid, { rawMessage: { conversation: 'pesan mentah' } })
 ---
 
 ## Changelog
+
+### [2.2.1] - 2026-11-06
+
+#### Diubah
+- Dokumentasi README dan CHANGELOG dirapikan. Tidak ada perubahan kode.
+
+### [2.2.0] - 2026-11-06
+
+#### Ditambahkan
+- `sock.sendPrivateRelay(jid, message, options)`: kirim pesan ke sebagian perangkat saja. Opsi `mode` (`include`/`exclude`), `target` (nomor, JID PN, JID LID, opsional `:device`), `deviceMode` (`all`/`primary`/`secondary`), `targetMe`, `ai`, `statusJidList`. Mendukung 1:1, grup, status, dan newsletter.
+- `signalRepository.encryptGroupMessage({ ..., resetSenderKey })`: paksa sender key grup baru.
+- Node relay otomatis bila belum ada di `additionalNodes`: `biz` untuk `productMessage`, `orderMessage`, dan tombol `payment_key_info`; `meta event_type=creation` untuk `eventMessage`; `meta polltype=creation` untuk semua varian poll.
+- Konten `sendMessage` baru: `photoPoll`, `buttonLocation`, `rawMessage`.
+- Poll bergambar mengirim `meta contenttype=image` pada induk dan `meta message_association_type=media_poll` pada tiap opsi.
+- WAProto: enum `proto.Message.MediaKeyDomain`, field `mediaKeyDomain` di pesan media (audio, dokumen, gambar, stiker, video, `MMSThumbnailMetadata`), tipe `proto.BotAvatarMetadata` dan field `BotMetadata.avatarMetadata`.
+
+#### Catatan
+- Private relay di grup membuat sender key baru, lalu mengosongkan `sender-key-memory` grup itu. Pesan grup normal berikutnya mengirim ulang sender key ke semua anggota.
+- Perilaku pesan lain (teks, media, tombol, list, interactive) tidak berubah.
+
+### [2.1.7] - 2026-11-02
+
+#### Diubah
+- README: bagian Testing dihapus karena folder `test/` tidak ikut paket npm. Label asal port di changelog README dirapikan.
+
+### [2.1.6] - 2026-11-02
+
+#### Diperbaiki
+- Link banner README kini memakai file di repo sendiri (`assets/banner.png`), sehingga tampil di GitHub dan npm.
+
+### [2.1.5] - 2026-11-02
+
+#### Ditambahkan
+- Dukungan dual package **CJS + ESM**: `require('raiden-baileys')` dan `import ... from 'raiden-baileys'` sama-sama jalan. Entry ESM `lib/index.mjs` (default export + 319 named export) hanya membungkus `lib/index.js` lewat `createRequire`, jadi hanya ada satu instance modul.
+- Field `exports` di `package.json` (kondisi `import`/`require`/`default`, plus `./WAProto`, `./lib/*`, `./package.json`) dan field `module`.
+- Tipe ESM `lib/index.d.mts`.
+- `scripts/gen-esm.js` (`npm run build:esm`) untuk membuat ulang `lib/index.mjs` dari export CJS.
+
+#### Catatan
+- Kode di `lib/` tidak diubah, tetap CommonJS.
+- Karena `exports` kini aktif, import folder seperti `raiden-baileys/lib/Utils` tidak lagi bisa; pakai `raiden-baileys/lib/Utils/index`. Import file (dengan atau tanpa `.js`) tetap bisa.
 
 ### [2.1.4] - 2026-10-31
 

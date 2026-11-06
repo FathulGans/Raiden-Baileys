@@ -1769,6 +1769,7 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    /** Tambahan dari WAProto @levvsync/baileys (LevviSync, MIT). */
     interface IBotAvatarMetadata {
         sentiment?: (number|null);
         behaviorGraph?: (string|null);

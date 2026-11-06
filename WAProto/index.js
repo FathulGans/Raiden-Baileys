@@ -11539,6 +11539,7 @@ const proto = $root.proto = (() => {
     })();
 
 
+    // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
     proto.BotAvatarMetadata = (function () {
         function BotAvatarMetadata(p) {
             if (p)
@@ -12003,6 +12004,7 @@ const proto = $root.proto = (() => {
             set: $util.oneOfSetter($oneOfFields)
         });
 
+        // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
         BotMetadata.prototype.avatarMetadata = null;
         Object.defineProperty(BotMetadata.prototype, "_avatarMetadata", {
             get: $util.oneOfGetter($oneOfFields = ["avatarMetadata"]),
@@ -64288,6 +64290,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             AudioMessage.prototype.mediaKeyDomain = null;
             Object.defineProperty(AudioMessage.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -68844,6 +68847,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             DocumentMessage.prototype.mediaKeyDomain = null;
             Object.defineProperty(DocumentMessage.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -73938,6 +73942,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             ImageMessage.prototype.mediaKeyDomain = null;
             Object.defineProperty(ImageMessage.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -79444,6 +79449,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             MMSThumbnailMetadata.prototype.mediaKeyDomain = null;
             Object.defineProperty(MMSThumbnailMetadata.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -93757,6 +93763,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             StickerMessage.prototype.mediaKeyDomain = null;
             Object.defineProperty(StickerMessage.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -96488,6 +96495,7 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
             VideoMessage.prototype.mediaKeyDomain = null;
             Object.defineProperty(VideoMessage.prototype, "_mediaKeyDomain", {
                 get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
@@ -97152,6 +97160,7 @@ const proto = $root.proto = (() => {
             return VideoMessage;
         })();
 
+        // field/tipe tambahan dari WAProto @levvsync/baileys (LevviSync, MIT)
         Message.MediaKeyDomain = (function () {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "UNSET"] = 0;
