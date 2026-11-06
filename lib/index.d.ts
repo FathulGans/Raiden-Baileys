@@ -20,6 +20,28 @@ export type AnyMessageContent = AnyObject;
 export type MiscMessageGenerationOptions = AnyObject;
 export type SocketConfig = AnyObject;
 
+export interface PrivateRelayOptions {
+    messageId?: string;
+    additionalAttributes?: { [key: string]: string };
+    additionalNodes?: AnyObject[];
+    /** tambah node <bot biz_bot="1"/> */
+    ai?: boolean;
+    useUserDevicesCache?: boolean;
+    cachedGroupMetadata?: (jid: string) => Promise<AnyObject | undefined>;
+    useCachedGroupMetadata?: boolean;
+    /** wajib untuk status@broadcast */
+    statusJidList?: string[];
+    /** "exclude" (default): kirim ke semua kecuali target. "include": hanya ke target. */
+    mode?: "include" | "exclude";
+    /** nomor / JID PN / JID LID, opsional dengan ":device" */
+    target?: string[];
+    /** paksa ikut/tidak perangkat milik sendiri */
+    targetMe?: boolean;
+    /** default true: atribut decrypt-fail="hide" */
+    hideDecryptFail?: boolean;
+    deviceMode?: "all" | "primary" | "secondary";
+}
+
 export interface WASocket {
     ev: {
         on(event: string, listener: (...args: any[]) => void): void;
@@ -32,6 +54,8 @@ export interface WASocket {
     authState: AuthenticationState;
     sendMessage(jid: string, content: AnyMessageContent, options?: MiscMessageGenerationOptions): Promise<proto.WebMessageInfo | undefined>;
     relayMessage(jid: string, message: proto.IMessage, options?: AnyObject): Promise<string>;
+    /** Relay proto.IMessage ke sebagian perangkat saja (port @levvsync/baileys). Mengembalikan message id. */
+    sendPrivateRelay(jid: string, message: proto.IMessage, options?: PrivateRelayOptions): Promise<string>;
     readMessages(keys: proto.IMessageKey[]): Promise<void>;
     sendPresenceUpdate(type: string, toJid?: string): Promise<void>;
     updateMediaMessage(message: proto.IWebMessageInfo): Promise<proto.IWebMessageInfo>;

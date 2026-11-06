@@ -11538,6 +11538,158 @@ const proto = $root.proto = (() => {
         return BotMessageSharingInfo;
     })();
 
+
+    proto.BotAvatarMetadata = (function () {
+        function BotAvatarMetadata(p) {
+            if (p)
+                for (var ks = Object.keys(p), i = 0; i < ks.length; ++i)
+                    if (p[ks[i]] != null)
+                        this[ks[i]] = p[ks[i]];
+        }
+        BotAvatarMetadata.prototype.sentiment = null;
+        BotAvatarMetadata.prototype.behaviorGraph = null;
+        BotAvatarMetadata.prototype.action = null;
+        BotAvatarMetadata.prototype.intensity = null;
+        BotAvatarMetadata.prototype.wordCount = null;
+        let $oneOfFields;
+        Object.defineProperty(BotAvatarMetadata.prototype, "_sentiment", {
+            get: $util.oneOfGetter($oneOfFields = ["sentiment"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+        Object.defineProperty(BotAvatarMetadata.prototype, "_behaviorGraph", {
+            get: $util.oneOfGetter($oneOfFields = ["behaviorGraph"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+        Object.defineProperty(BotAvatarMetadata.prototype, "_action", {
+            get: $util.oneOfGetter($oneOfFields = ["action"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+        Object.defineProperty(BotAvatarMetadata.prototype, "_intensity", {
+            get: $util.oneOfGetter($oneOfFields = ["intensity"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+        Object.defineProperty(BotAvatarMetadata.prototype, "_wordCount", {
+            get: $util.oneOfGetter($oneOfFields = ["wordCount"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
+        BotAvatarMetadata.create = function create(properties) {
+            return new BotAvatarMetadata(properties);
+        };
+        BotAvatarMetadata.encode = function encode(m, w) {
+            if (!w)
+                w = $Writer.create();
+            if (m.sentiment != null && Object.hasOwnProperty.call(m, "sentiment"))
+                w.uint32(8).uint32(m.sentiment);
+            if (m.behaviorGraph != null && Object.hasOwnProperty.call(m, "behaviorGraph"))
+                w.uint32(18).string(m.behaviorGraph);
+            if (m.action != null && Object.hasOwnProperty.call(m, "action"))
+                w.uint32(24).uint32(m.action);
+            if (m.intensity != null && Object.hasOwnProperty.call(m, "intensity"))
+                w.uint32(32).uint32(m.intensity);
+            if (m.wordCount != null && Object.hasOwnProperty.call(m, "wordCount"))
+                w.uint32(40).uint32(m.wordCount);
+            return w;
+        };
+        BotAvatarMetadata.decode = function decode(r, l, e) {
+            if (!(r instanceof $Reader))
+                r = $Reader.create(r);
+            var c = l === undefined ? r.len : r.pos + l, m = new $root.proto.BotAvatarMetadata();
+            while (r.pos < c) {
+                var t = r.uint32();
+                if (t === e)
+                    break;
+                switch (t >>> 3) {
+                    case 1: {
+                        m.sentiment = r.uint32();
+                        break;
+                    }
+                    case 2: {
+                        m.behaviorGraph = r.string();
+                        break;
+                    }
+                    case 3: {
+                        m.action = r.uint32();
+                        break;
+                    }
+                    case 4: {
+                        m.intensity = r.uint32();
+                        break;
+                    }
+                    case 5: {
+                        m.wordCount = r.uint32();
+                        break;
+                    }
+                    default:
+                        r.skipType(t & 7);
+                        break;
+                }
+            }
+            return m;
+        };
+        BotAvatarMetadata.fromObject = function fromObject(d) {
+            if (d instanceof $root.proto.BotAvatarMetadata)
+                return d;
+            var m = new $root.proto.BotAvatarMetadata();
+            if (d.sentiment != null) {
+                m.sentiment = d.sentiment >>> 0;
+            }
+            if (d.behaviorGraph != null) {
+                m.behaviorGraph = String(d.behaviorGraph);
+            }
+            if (d.action != null) {
+                m.action = d.action >>> 0;
+            }
+            if (d.intensity != null) {
+                m.intensity = d.intensity >>> 0;
+            }
+            if (d.wordCount != null) {
+                m.wordCount = d.wordCount >>> 0;
+            }
+            return m;
+        };
+        BotAvatarMetadata.toObject = function toObject(m, o) {
+            if (!o)
+                o = {};
+            var d = {};
+            if (m.sentiment != null && m.hasOwnProperty("sentiment")) {
+                d.sentiment = m.sentiment;
+                if (o.oneofs)
+                    d._sentiment = "sentiment";
+            }
+            if (m.behaviorGraph != null && m.hasOwnProperty("behaviorGraph")) {
+                d.behaviorGraph = m.behaviorGraph;
+                if (o.oneofs)
+                    d._behaviorGraph = "behaviorGraph";
+            }
+            if (m.action != null && m.hasOwnProperty("action")) {
+                d.action = m.action;
+                if (o.oneofs)
+                    d._action = "action";
+            }
+            if (m.intensity != null && m.hasOwnProperty("intensity")) {
+                d.intensity = m.intensity;
+                if (o.oneofs)
+                    d._intensity = "intensity";
+            }
+            if (m.wordCount != null && m.hasOwnProperty("wordCount")) {
+                d.wordCount = m.wordCount;
+                if (o.oneofs)
+                    d._wordCount = "wordCount";
+            }
+            return d;
+        };
+        BotAvatarMetadata.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, minimal_js_1.default.util.toJSONOptions);
+        };
+        BotAvatarMetadata.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.BotAvatarMetadata";
+        };
+        return BotAvatarMetadata;
+    })();
+
     proto.BotMetadata = (function() {
 
         function BotMetadata(p) {
@@ -11851,6 +12003,11 @@ const proto = $root.proto = (() => {
             set: $util.oneOfSetter($oneOfFields)
         });
 
+        BotMetadata.prototype.avatarMetadata = null;
+        Object.defineProperty(BotMetadata.prototype, "_avatarMetadata", {
+            get: $util.oneOfGetter($oneOfFields = ["avatarMetadata"]),
+            set: $util.oneOfSetter($oneOfFields)
+        });
         BotMetadata.create = function create(properties) {
             return new BotMetadata(properties);
         };
@@ -11944,6 +12101,8 @@ const proto = $root.proto = (() => {
                 $root.proto.BotHistoryShareMetadata.encode(m.botHistoryShareMetadata, w.uint32(346).fork()).ldelim();
             if (m.internalMetadata != null && Object.hasOwnProperty.call(m, "internalMetadata"))
                 w.uint32(7994).bytes(m.internalMetadata);
+            if (m.avatarMetadata != null && Object.hasOwnProperty.call(m, "avatarMetadata"))
+                $root.proto.BotAvatarMetadata.encode(m.avatarMetadata, w.uint32(10).fork()).ldelim();
             return w;
         };
 
@@ -12130,6 +12289,10 @@ const proto = $root.proto = (() => {
                     }
                 case 999: {
                         m.internalMetadata = r.bytes();
+                        break;
+                    }
+                    case 1: {
+                        m.avatarMetadata = $root.proto.BotAvatarMetadata.decode(r, r.uint32());
                         break;
                     }
                 default:
@@ -12353,6 +12516,11 @@ const proto = $root.proto = (() => {
                 else if (d.internalMetadata.length >= 0)
                     m.internalMetadata = d.internalMetadata;
             }
+            if (d.avatarMetadata != null) {
+                if (typeof d.avatarMetadata !== "object")
+                    throw TypeError(".proto.BotMetadata.avatarMetadata: object expected");
+                m.avatarMetadata = $root.proto.BotAvatarMetadata.fromObject(d.avatarMetadata);
+            }
             return m;
         };
 
@@ -12574,6 +12742,11 @@ const proto = $root.proto = (() => {
                 d.internalMetadata = o.bytes === String ? $util.base64.encode(m.internalMetadata, 0, m.internalMetadata.length) : o.bytes === Array ? Array.prototype.slice.call(m.internalMetadata) : m.internalMetadata;
                 if (o.oneofs)
                     d._internalMetadata = "internalMetadata";
+            }
+            if (m.avatarMetadata != null && m.hasOwnProperty("avatarMetadata")) {
+                d.avatarMetadata = $root.proto.BotAvatarMetadata.toObject(m.avatarMetadata, o);
+                if (o.oneofs)
+                    d._avatarMetadata = "avatarMetadata";
             }
             return d;
         };
@@ -64115,6 +64288,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            AudioMessage.prototype.mediaKeyDomain = null;
+            Object.defineProperty(AudioMessage.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             AudioMessage.create = function create(properties) {
                 return new AudioMessage(properties);
             };
@@ -64154,6 +64332,8 @@ const proto = $root.proto = (() => {
                     w.uint32(168).bool(m.viewOnce);
                 if (m.accessibilityLabel != null && Object.hasOwnProperty.call(m, "accessibilityLabel"))
                     w.uint32(178).string(m.accessibilityLabel);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(184).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -64232,6 +64412,10 @@ const proto = $root.proto = (() => {
                         }
                     case 22: {
                             m.accessibilityLabel = r.string();
+                            break;
+                        }
+                        case 23: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -64329,6 +64513,34 @@ const proto = $root.proto = (() => {
                 if (d.accessibilityLabel != null) {
                     m.accessibilityLabel = String(d.accessibilityLabel);
                 }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
+                }
                 return m;
             };
 
@@ -64421,6 +64633,11 @@ const proto = $root.proto = (() => {
                     d.accessibilityLabel = m.accessibilityLabel;
                     if (o.oneofs)
                         d._accessibilityLabel = "accessibilityLabel";
+                }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
                 }
                 return d;
             };
@@ -68627,6 +68844,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            DocumentMessage.prototype.mediaKeyDomain = null;
+            Object.defineProperty(DocumentMessage.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             DocumentMessage.create = function create(properties) {
                 return new DocumentMessage(properties);
             };
@@ -68676,6 +68898,8 @@ const proto = $root.proto = (() => {
                     w.uint32(162).string(m.caption);
                 if (m.accessibilityLabel != null && Object.hasOwnProperty.call(m, "accessibilityLabel"))
                     w.uint32(170).string(m.accessibilityLabel);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(176).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -68774,6 +68998,10 @@ const proto = $root.proto = (() => {
                         }
                     case 21: {
                             m.accessibilityLabel = r.string();
+                            break;
+                        }
+                        case 22: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -68888,6 +69116,34 @@ const proto = $root.proto = (() => {
                 }
                 if (d.accessibilityLabel != null) {
                     m.accessibilityLabel = String(d.accessibilityLabel);
+                }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
                 }
                 return m;
             };
@@ -69006,6 +69262,11 @@ const proto = $root.proto = (() => {
                     d.accessibilityLabel = m.accessibilityLabel;
                     if (o.oneofs)
                         d._accessibilityLabel = "accessibilityLabel";
+                }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
                 }
                 return d;
             };
@@ -73677,6 +73938,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            ImageMessage.prototype.mediaKeyDomain = null;
+            Object.defineProperty(ImageMessage.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             ImageMessage.create = function create(properties) {
                 return new ImageMessage(properties);
             };
@@ -73752,6 +74018,8 @@ const proto = $root.proto = (() => {
                     w.uint32(258).string(m.accessibilityLabel);
                 if (m.qrUrl != null && Object.hasOwnProperty.call(m, "qrUrl"))
                     w.uint32(274).string(m.qrUrl);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(264).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -73897,6 +74165,10 @@ const proto = $root.proto = (() => {
                         }
                     case 34: {
                             m.qrUrl = r.string();
+                            break;
+                        }
+                        case 33: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -74091,6 +74363,34 @@ const proto = $root.proto = (() => {
                 if (d.qrUrl != null) {
                     m.qrUrl = String(d.qrUrl);
                 }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
+                }
                 return m;
             };
 
@@ -74261,6 +74561,11 @@ const proto = $root.proto = (() => {
                     d.qrUrl = m.qrUrl;
                     if (o.oneofs)
                         d._qrUrl = "qrUrl";
+                }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
                 }
                 return d;
             };
@@ -79139,6 +79444,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            MMSThumbnailMetadata.prototype.mediaKeyDomain = null;
+            Object.defineProperty(MMSThumbnailMetadata.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             MMSThumbnailMetadata.create = function create(properties) {
                 return new MMSThumbnailMetadata(properties);
             };
@@ -79160,6 +79470,8 @@ const proto = $root.proto = (() => {
                     w.uint32(48).uint32(m.thumbnailHeight);
                 if (m.thumbnailWidth != null && Object.hasOwnProperty.call(m, "thumbnailWidth"))
                     w.uint32(56).uint32(m.thumbnailWidth);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(64).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -79202,6 +79514,10 @@ const proto = $root.proto = (() => {
                         }
                     case 7: {
                             m.thumbnailWidth = r.uint32();
+                            break;
+                        }
+                        case 8: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -79257,6 +79573,34 @@ const proto = $root.proto = (() => {
                 if (d.thumbnailWidth != null) {
                     m.thumbnailWidth = d.thumbnailWidth >>> 0;
                 }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
+                }
                 return m;
             };
 
@@ -79301,6 +79645,11 @@ const proto = $root.proto = (() => {
                     d.thumbnailWidth = m.thumbnailWidth;
                     if (o.oneofs)
                         d._thumbnailWidth = "thumbnailWidth";
+                }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
                 }
                 return d;
             };
@@ -93408,6 +93757,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            StickerMessage.prototype.mediaKeyDomain = null;
+            Object.defineProperty(StickerMessage.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             StickerMessage.create = function create(properties) {
                 return new StickerMessage(properties);
             };
@@ -93459,6 +93813,8 @@ const proto = $root.proto = (() => {
                     w.uint32(192).int32(m.premium);
                 if (m.emojis != null && Object.hasOwnProperty.call(m, "emojis"))
                     w.uint32(202).string(m.emojis);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(184).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -93561,6 +93917,10 @@ const proto = $root.proto = (() => {
                         }
                     case 25: {
                             m.emojis = r.string();
+                            break;
+                        }
+                        case 23: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -93682,6 +94042,34 @@ const proto = $root.proto = (() => {
                 }
                 if (d.emojis != null) {
                     m.emojis = String(d.emojis);
+                }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
                 }
                 return m;
             };
@@ -93808,6 +94196,11 @@ const proto = $root.proto = (() => {
                     d.emojis = m.emojis;
                     if (o.oneofs)
                         d._emojis = "emojis";
+                }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
                 }
                 return d;
             };
@@ -96095,6 +96488,11 @@ const proto = $root.proto = (() => {
                 set: $util.oneOfSetter($oneOfFields)
             });
 
+            VideoMessage.prototype.mediaKeyDomain = null;
+            Object.defineProperty(VideoMessage.prototype, "_mediaKeyDomain", {
+                get: $util.oneOfGetter($oneOfFields = ["mediaKeyDomain"]),
+                set: $util.oneOfSetter($oneOfFields)
+            });
             VideoMessage.create = function create(properties) {
                 return new VideoMessage(properties);
             };
@@ -96168,6 +96566,8 @@ const proto = $root.proto = (() => {
                     w.uint32(242).string(m.metadataUrl);
                 if (m.videoSourceType != null && Object.hasOwnProperty.call(m, "videoSourceType"))
                     w.uint32(248).int32(m.videoSourceType);
+                if (m.mediaKeyDomain != null && Object.hasOwnProperty.call(m, "mediaKeyDomain"))
+                    w.uint32(256).int32(m.mediaKeyDomain);
                 return w;
             };
 
@@ -96308,6 +96708,10 @@ const proto = $root.proto = (() => {
                         }
                     case 31: {
                             m.videoSourceType = r.int32();
+                            break;
+                        }
+                        case 32: {
+                            m.mediaKeyDomain = r.int32();
                             break;
                         }
                     default:
@@ -96515,6 +96919,34 @@ const proto = $root.proto = (() => {
                     m.videoSourceType = 1;
                     break;
                 }
+                switch (d.mediaKeyDomain) {
+                    default:
+                        if (typeof d.mediaKeyDomain === "number") {
+                            m.mediaKeyDomain = d.mediaKeyDomain;
+                            break;
+                        }
+                        break;
+                    case "UNSET":
+                    case 0:
+                        m.mediaKeyDomain = 0;
+                        break;
+                    case "E2EE_CHAT":
+                    case 1:
+                        m.mediaKeyDomain = 1;
+                        break;
+                    case "STATUS":
+                    case 2:
+                        m.mediaKeyDomain = 2;
+                        break;
+                    case "CAPI":
+                    case 3:
+                        m.mediaKeyDomain = 3;
+                        break;
+                    case "BOT":
+                    case 4:
+                        m.mediaKeyDomain = 4;
+                        break;
+                }
                 return m;
             };
 
@@ -96689,6 +97121,11 @@ const proto = $root.proto = (() => {
                     if (o.oneofs)
                         d._videoSourceType = "videoSourceType";
                 }
+                if (m.mediaKeyDomain != null && m.hasOwnProperty("mediaKeyDomain")) {
+                    d.mediaKeyDomain = o.enums === String ? $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] === undefined ? m.mediaKeyDomain : $root.proto.Message.MediaKeyDomain[m.mediaKeyDomain] : m.mediaKeyDomain;
+                    if (o.oneofs)
+                        d._mediaKeyDomain = "mediaKeyDomain";
+                }
                 return d;
             };
 
@@ -96715,6 +97152,15 @@ const proto = $root.proto = (() => {
             return VideoMessage;
         })();
 
+        Message.MediaKeyDomain = (function () {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "UNSET"] = 0;
+            values[valuesById[1] = "E2EE_CHAT"] = 1;
+            values[valuesById[2] = "STATUS"] = 2;
+            values[valuesById[3] = "CAPI"] = 3;
+            values[valuesById[4] = "BOT"] = 4;
+            return values;
+        })();
         return Message;
     })();
 

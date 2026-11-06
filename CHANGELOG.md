@@ -2,6 +2,27 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.0] - 2026-11-06
+
+Port fitur dari [`@levvsync/baileys`](https://www.npmjs.com/package/@levvsync/baileys) 0.0.3.
+
+### Ditambahkan
+- `sock.sendPrivateRelay(jid, message, options)`: relay ke sebagian perangkat (`mode` include/exclude, `target` nomor/PN/LID/device, `deviceMode` all/primary/secondary, `targetMe`, `ai`, `statusJidList`). Mendukung 1:1, grup, status, dan newsletter. Tipe `PrivateRelayOptions` di `index.d.ts`.
+- `signalRepository.encryptGroupMessage({ ..., resetSenderKey })`: paksa sender key baru.
+- Node relay otomatis bila belum ada di `additionalNodes`: `biz` untuk `productMessage` (`catalog_message`), `orderMessage` (`order_details`), tombol `payment_key_info`; `meta event_type=creation` untuk `eventMessage`; `meta polltype=creation` untuk semua varian `pollCreationMessage` yang dikirim lewat `relayMessage`.
+- `sendMessage` konten baru: `photoPoll` (alias `sendImagePoll`, format `values`), `buttonLocation` (buttonsMessage header lokasi), `rawMessage` (proto.IMessage mentah).
+- Poll bergambar kini mengirim `meta contenttype=image` pada induk dan `meta message_association_type=media_poll` pada tiap opsi.
+- WAProto: enum `proto.Message.MediaKeyDomain` (`UNSET`, `E2EE_CHAT`, `STATUS`, `CAPI`, `BOT`) dan field `mediaKeyDomain` di `AudioMessage` (23), `DocumentMessage` (22), `ImageMessage` (33), `MMSThumbnailMetadata` (8), `StickerMessage` (23), `VideoMessage` (32). Tipe `proto.BotAvatarMetadata` dan field `BotMetadata.avatarMetadata` (1). Proto lain milik Raiden tidak berubah. `faviconMMSMetadata` tidak ditambah karena sudah ada sebagai `ExtendedTextMessage.faviconMmsMetadata` (field 33).
+
+### Diperbaiki (dibanding versi levvsync)
+- Target `"628xx:2"` tanpa `@` kini dibaca sebagai nomor + device (levvsync membacanya sebagai satu nomor).
+- Private relay grup mengosongkan `sender-key-memory` setelah sender key diganti, agar pesan grup normal berikutnya tetap bisa didekripsi semua anggota.
+- Private relay grup LID tidak mengirim SKDM ke perangkat ini sendiri.
+
+### Catatan
+- Fungsi `sendPrivateRelay` membawa watermark lisensi dari pembuatnya (Nixel). Watermark wajib dipertahankan.
+- Perilaku pesan lain (teks, media, tombol, list, interactive) tidak berubah.
+
 ## [2.1.6] - 2026-11-02
 
 ### Diperbaiki

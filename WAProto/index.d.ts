@@ -1769,7 +1769,31 @@ export namespace proto {
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
+    interface IBotAvatarMetadata {
+        sentiment?: (number|null);
+        behaviorGraph?: (string|null);
+        action?: (number|null);
+        intensity?: (number|null);
+        wordCount?: (number|null);
+    }
+
+    class BotAvatarMetadata implements IBotAvatarMetadata {
+        constructor(p?: proto.IBotAvatarMetadata);
+        public sentiment?: (number|null);
+        public behaviorGraph?: (string|null);
+        public action?: (number|null);
+        public intensity?: (number|null);
+        public wordCount?: (number|null);
+        public static create(properties?: proto.IBotAvatarMetadata): proto.BotAvatarMetadata;
+        public static encode(m: proto.IBotAvatarMetadata, w?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(r: ($protobuf.Reader|Uint8Array), l?: number): proto.BotAvatarMetadata;
+        public static fromObject(d: { [k: string]: any }): proto.BotAvatarMetadata;
+        public static toObject(m: proto.BotAvatarMetadata, o?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
     interface IBotMetadata {
+        avatarMetadata?: (proto.IBotAvatarMetadata|null);
         personaId?: (string|null);
         pluginMetadata?: (proto.IBotPluginMetadata|null);
         suggestedPromptMetadata?: (proto.IBotSuggestedPromptMetadata|null);
@@ -1816,6 +1840,7 @@ export namespace proto {
     }
 
     class BotMetadata implements IBotMetadata {
+        public avatarMetadata?: (proto.IBotAvatarMetadata|null);
         constructor(p?: proto.IBotMetadata);
         public personaId: string;
         public pluginMetadata?: (proto.IBotPluginMetadata|null);
@@ -6369,6 +6394,13 @@ export namespace proto {
     }
 
     namespace Message {
+        enum MediaKeyDomain {
+            UNSET = 0,
+            E2EE_CHAT = 1,
+            STATUS = 2,
+            CAPI = 3,
+            BOT = 4
+        }
 
         interface IAlbumMessage {
             expectedImageCount?: (number|null);
@@ -6515,6 +6547,7 @@ export namespace proto {
         }
 
         interface IAudioMessage {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             url?: (string|null);
             mimetype?: (string|null);
             fileSha256?: (Uint8Array|null);
@@ -6534,6 +6567,7 @@ export namespace proto {
         }
 
         class AudioMessage implements IAudioMessage {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IAudioMessage);
             public url: string;
             public mimetype: string;
@@ -7177,6 +7211,7 @@ export namespace proto {
         }
 
         interface IDocumentMessage {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             url?: (string|null);
             mimetype?: (string|null);
             title?: (string|null);
@@ -7201,6 +7236,7 @@ export namespace proto {
         }
 
         class DocumentMessage implements IDocumentMessage {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IDocumentMessage);
             public url: string;
             public mimetype: string;
@@ -7844,6 +7880,7 @@ export namespace proto {
         }
 
         interface IImageMessage {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             url?: (string|null);
             mimetype?: (string|null);
             caption?: (string|null);
@@ -7877,6 +7914,7 @@ export namespace proto {
         }
 
         class ImageMessage implements IImageMessage {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IImageMessage);
             public url: string;
             public mimetype: string;
@@ -8649,6 +8687,7 @@ export namespace proto {
         }
 
         interface IMMSThumbnailMetadata {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             thumbnailDirectPath?: (string|null);
             thumbnailSha256?: (Uint8Array|null);
             thumbnailEncSha256?: (Uint8Array|null);
@@ -8659,6 +8698,7 @@ export namespace proto {
         }
 
         class MMSThumbnailMetadata implements IMMSThumbnailMetadata {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IMMSThumbnailMetadata);
             public thumbnailDirectPath: string;
             public thumbnailSha256: Uint8Array;
@@ -10700,6 +10740,7 @@ export namespace proto {
         }
 
         interface IStickerMessage {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             url?: (string|null);
             fileSha256?: (Uint8Array|null);
             fileEncSha256?: (Uint8Array|null);
@@ -10725,6 +10766,7 @@ export namespace proto {
         }
 
         class StickerMessage implements IStickerMessage {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IStickerMessage);
             public url: string;
             public fileSha256: Uint8Array;
@@ -11031,6 +11073,7 @@ export namespace proto {
         }
 
         interface IVideoMessage {
+            mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             url?: (string|null);
             mimetype?: (string|null);
             fileSha256?: (Uint8Array|null);
@@ -11064,6 +11107,7 @@ export namespace proto {
         }
 
         class VideoMessage implements IVideoMessage {
+            public mediaKeyDomain?: (proto.Message.MediaKeyDomain|null);
             constructor(p?: proto.Message.IVideoMessage);
             public url: string;
             public mimetype: string;

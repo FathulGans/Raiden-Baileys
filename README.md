@@ -41,6 +41,9 @@ Dirancang agar ringan, cepat, dan mudah digunakan, serta mendukung fitur-fitur t
 - Dukungan LID: pemetaan PN ↔ LID persisten, sesi Signal kanonik LID
 - Retry manager: cache pesan terkirim & auto session recreation
 - Transaksi kunci Signal serial per akun (mutex + antrean per tipe key)
+- Private relay (`sendPrivateRelay`): kirim ke sebagian perangkat saja, include/exclude per nomor, LID, atau device
+- Metadata relay otomatis: node `biz` untuk katalog, order, `payment_key_info`; node `meta` untuk poll dan event
+- `photoPoll`, `buttonLocation`, dan `rawMessage` di `sendMessage`
 - Lightweight & scalable
 
 ---
@@ -109,6 +112,99 @@ start()
 | `enableRecentMessageCache` | `true` | Cache pesan terkirim untuk retry |
 | `enableAutoSessionRecreation` | `true` | Buat ulang sesi saat retry |
 | `lidSessionMigration` | `true` | Migrasi sesi Signal PN → LID |
+
+---
+
+## Fitur dari @levvsync/baileys
+
+Fitur berikut di-port dari [`@levvsync/baileys`](https://www.npmjs.com/package/@levvsync/baileys) 0.0.3 dan disesuaikan dengan internal Raiden.
+
+### Private relay
+
+Kirim `proto.IMessage` hanya ke sebagian perangkat. Fungsi mengembalikan message id.
+
+```js
+// semua perangkat kecuali device 2 milik 628xxx
+await sock.sendPrivateRelay('628xxx@s.whatsapp.net', { conversation: 'halo' }, {
+  mode: 'exclude',          // 'exclude' (default) | 'include'
+  target: ['628xxx:2'],     // nomor, JID PN, JID LID, opsional ":device"
+})
+
+// hanya HP utama penerima
+await sock.sendPrivateRelay(jid, message, { mode: 'include', target: ['628xxx'], deviceMode: 'primary' })
+
+// grup: anggota target tidak menerima pesan
+await sock.sendPrivateRelay('1203...@g.us', message, { target: ['628yyy'] })
+```
+
+| Opsi | Default | Fungsi |
+| --- | --- | --- |
+| `mode` | `'exclude'` | `include` = hanya target, `exclude` = semua kecuali target |
+| `target` | `[]` | Daftar nomor / JID. Alias PN ↔ LID ikut dicocokkan |
+| `deviceMode` | `'all'` | `all`, `primary` (device 0), `secondary` (perangkat pendamping) |
+| `targetMe` | - | `true`/`false` memaksa perangkat sendiri ikut/tidak |
+| `hideDecryptFail` | `true` | Atribut `decrypt-fail="hide"` |
+| `ai` | `false` | Tambah node `<bot biz_bot="1"/>` |
+| `statusJidList` | - | Wajib untuk `status@broadcast` |
+
+Catatan grup: private relay membuat sender key baru, lalu mengosongkan `sender-key-memory` grup itu. Pesan grup normal berikutnya mengirim ulang sender key ke semua anggota.
+
+### Metadata relay otomatis
+
+`relayMessage` dan `sendMessage` kini menambah node berikut bila belum ada di `additionalNodes`:
+
+| Isi pesan | Node |
+| --- | --- |
+| `productMessage` | `<biz native_flow_name="catalog_message"/>` |
+| `orderMessage` | `<biz native_flow_name="order_details"/>` |
+| tombol `payment_key_info` | `<biz><interactive type="native_flow"><native_flow name="payment_key_info"/></interactive></biz>` |
+| `pollCreationMessage` (V1/V2/V3/V5) | `<meta polltype="creation"/>` |
+| `eventMessage` | `<meta event_type="creation"/>` |
+
+### photoPoll
+
+Alias `sock.sendImagePoll` lewat `sendMessage`.
+
+```js
+await sock.sendMessage(jid, {
+  photoPoll: {
+    name: 'Pilih menu',
+    selectableCount: 1,
+    values: [
+      { name: 'Nasi goreng', image: { url: './nasgor.jpg' } },
+      { name: 'Mie ayam', image: { url: './mieayam.jpg' } },
+    ],
+  },
+})
+```
+
+### buttonLocation
+
+Tombol dengan header lokasi. `thumbnail` berupa URL, path, atau Buffer (butuh paket opsional `jimp`).
+
+```js
+await sock.sendMessage(jid, {
+  buttonLocation: {
+    text: 'Kantor kami',
+    footer: 'Raiden',
+    title: 'Kantor Pusat',
+    address: 'Jl. Contoh No. 1',
+    thumbnail: 'https://example.com/peta.jpg',
+    buttons: [
+      { id: 'rute', text: 'Rute' },
+      { id: 'menu', text: 'Menu', type: 'single_select', params: { title: 'Menu', sections: [] } },
+    ],
+  },
+})
+```
+
+### rawMessage
+
+Kirim `proto.IMessage` mentah lewat `sendMessage`. Isi pesan tidak diubah oleh builder Raiden.
+
+```js
+await sock.sendMessage(jid, { rawMessage: { conversation: 'pesan mentah' } })
+```
 
 ---
 
