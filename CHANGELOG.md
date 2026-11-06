@@ -2,6 +2,20 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.2] - 2026-11-06
+
+### Ditambahkan
+- WAProto diperbarui ke **WhatsApp 2.3000.1053411851** (sebelumnya 2.3000.1038158069): 44 tipe baru, 92 field baru, 95 nilai enum baru. Contoh tipe baru: `Message.RequestLocationMessage`, `Message.RequestLocationUpdateMessage`, `Message.ChatAnimatedWallpaper`, `Message.MusicMessage.Lyrics`, `Message.SharedDeviceContactHashKey`, `BotInterjectionMetadata`, `BizAIMetadataSync`.
+- `getTypeUrl()` tersedia di semua tipe proto.
+
+### Diperbaiki
+- `proto.BotAvatarMetadata.toJSON()` tidak lagi error (bug sejak 2.2.0).
+
+### Catatan
+- Tidak ada tipe, field, atau nilai enum lama yang dihapus. Proto lama yang tidak ada di WhatsApp Web (mis. `ConsumerApplication`) tetap dipertahankan.
+- `ChatSolidColorWallpaper` tetap memakai nama field lama `colorLight` / `colorDark` (WhatsApp Web menamainya `backgroundLightArgb` / `backgroundDarkArgb`, nomor field sama).
+- Hasil encode/decode pesan yang sudah ada tidak berubah.
+
 ## [2.2.1] - 2026-11-06
 
 ### Diubah
