@@ -54,20 +54,29 @@ export interface MetaStepInput {
     sources?: { title?: string; url?: string }[];
     /** judul progres (progressDescription); default: title langkah pertama */
     description?: string;
-    /** teks pesan; default: description */
+    /** teks pesan; default: judul langkah terakhir */
     text?: string;
+}
+
+export interface MetaStepEditResult {
+    key: proto.IMessageKey;
+    /** id pesan edit yang dikirim */
+    editId: string;
+    message: proto.IMessage;
 }
 
 export interface MetaStepHandle {
     key: proto.IMessageKey;
     message: proto.IWebMessageInfo;
     steps: AnyObject[];
-    /** kirim ulang (edit) pesan dengan daftar langkah saat ini */
-    update(): Promise<proto.WebMessageInfo | undefined>;
+    /** kirim edit pesan dengan daftar langkah saat ini */
+    update(): Promise<MetaStepEditResult>;
     /** langkah berikutnya; langkah lama jadi FINISHED kecuali { keepPrevious: true } */
-    step(next: MetaStepInput, options?: { keepPrevious?: boolean }): Promise<proto.WebMessageInfo | undefined>;
-    /** tandai semua langkah FINISHED, opsional tambah langkah penutup */
-    finish(last?: MetaStepInput): Promise<proto.WebMessageInfo | undefined>;
+    step(next: MetaStepInput, options?: { keepPrevious?: boolean }): Promise<MetaStepEditResult>;
+    /** semua langkah jadi FINISHED. String: teks pesan akhir. Objek: langkah penutup (title/body/text). */
+    done(last?: string | MetaStepInput): Promise<MetaStepEditResult>;
+    /** alias done */
+    finish(last?: string | MetaStepInput): Promise<MetaStepEditResult>;
 }
 
 export interface WASocket {

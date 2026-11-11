@@ -211,10 +211,13 @@ Pesan dengan indikator langkah/progres (`proto.BotProgressIndicatorMetadata`). S
 ```js
 const meta = await sock.sendMetaStep(jid, { title: 'Memproses', body: 'tunggu', disabled: false })
 await meta.step({ title: 'Langkah 2', body: 'hampir selesai' })
-await meta.finish({ title: 'Selesai', body: 'ok' })
+await meta.done('selesai')
 ```
 
+Pesan dikirim seperti balasan bot AI (dibungkus `botForwardedMessage`, ada tombol "Lihat perincian"). Teks pesan adalah judul langkah terakhir; `done('teks')` mengganti teks pesan akhir.
+
 - `disabled: true` membuat langkah langsung `FINISHED`. Default `false` (`EXECUTING`). Bisa juga pakai `status: 'PLANNED'`.
+- `meta.done(teks)` menandai semua langkah `FINISHED`. Objek `meta.done({ title, body })` menambah langkah penutup. `meta.finish` sama dengan `done`.
 - `meta.step()` menandai langkah lama `FINISHED` lalu menambah langkah baru. Pakai `meta.step(x, { keepPrevious: true })` agar status langkah lama tidak berubah.
 - Opsi langkah lain: `reasoning`, `sections: [{ title, body }]`, `sources: [{ title, url }]`, `description`, `text`.
 - Tampilan di klien penerima ditentukan WhatsApp. Field ini aslinya untuk balasan bot AI, jadi hasil di akun biasa belum dijamin.
@@ -222,6 +225,15 @@ await meta.finish({ title: 'Selesai', body: 'ok' })
 ---
 
 ## Changelog
+
+### [2.2.5] - 2026-11-11
+
+#### Diperbaiki
+- `sendMetaStep`: pesan sekarang dibungkus `botForwardedMessage` (flag forwarded AI bot) dan edit dikirim sebagai edit bot-forwarded, sehingga klien menampilkan "Lihat perincian" dan daftar Steps. Sebelumnya tampil teks biasa dan edit muncul sebagai pesan baru.
+- Teks pesan sekarang judul langkah terakhir.
+
+#### Ditambahkan
+- `meta.done(teks)`; `meta.finish` jadi alias. `step()`/`done()`/`update()` mengembalikan `{ key, editId, message }`.
 
 ### [2.2.4] - 2026-11-11
 

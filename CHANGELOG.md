@@ -2,6 +2,15 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.5] - 2026-11-11
+
+### Diperbaiki
+- `sendMetaStep`: pesan dibungkus `botForwardedMessage` (flag forwarded AI bot) dan edit dikirim sebagai edit bot-forwarded, sehingga klien menampilkan "Lihat perincian" dan daftar Steps. Sebelumnya tampil teks biasa dan edit muncul sebagai pesan baru.
+- Teks pesan sekarang judul langkah terakhir.
+
+### Ditambahkan
+- `meta.done(teks)`; `meta.finish` jadi alias. `step()` / `done()` / `update()` mengembalikan `{ key, editId, message }`.
+
 ## [2.2.4] - 2026-11-11
 
 ### Ditambahkan
