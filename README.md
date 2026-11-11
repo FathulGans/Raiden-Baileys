@@ -208,6 +208,15 @@ await sock.sendMessage(jid, { rawMessage: { conversation: 'pesan mentah' } })
 
 ## Changelog
 
+### [2.2.3] - 2026-11-11
+
+#### Ditambahkan
+- WAProto diperbarui ke **WhatsApp 2.3000.1054022738** (sebelumnya 2.3000.1053411851): 9 tipe baru, 16 field baru, 12 nilai enum baru. Contoh: `Message.VpcRequestMessage`, `Message.PaymentDetailsMessage`, `GroupRootKey`, `GroupRootKeyRequest`, `ClientPayload.IntegrationAttestation`, `StatusAttribution.StatusTemplate`, `Account.PnLearnState`, field `Message.instantVideoMessage`, `ContextInfo.forwardReachScore`, `MemberLabel.showAdminBadge`.
+
+#### Catatan
+- Tidak ada tipe, field, atau nilai enum lama yang dihapus. Hasil encode/decode pesan yang sudah ada tidak berubah.
+- `Message.ChatSolidColorWallpaper.backgroundLightArgb` / `backgroundDarkArgb` tidak ditambahkan karena nomor field 1 dan 2 sudah dipakai `colorLight` / `colorDark`.
+
 ### [2.2.2] - 2026-11-06
 
 #### Ditambahkan
