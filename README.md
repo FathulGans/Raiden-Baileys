@@ -204,9 +204,29 @@ Kirim `proto.IMessage` mentah lewat `sendMessage`. Isi pesan tidak diubah oleh b
 await sock.sendMessage(jid, { rawMessage: { conversation: 'pesan mentah' } })
 ```
 
+### sendMetaStep
+
+Pesan dengan indikator langkah/progres (`proto.BotProgressIndicatorMetadata`). Setiap langkah punya judul, isi, dan status `PLANNED` / `EXECUTING` / `FINISHED`. Pesan yang sama diedit tiap kali ada langkah baru.
+
+```js
+const meta = await sock.sendMetaStep(jid, { title: 'Memproses', body: 'tunggu', disabled: false })
+await meta.step({ title: 'Langkah 2', body: 'hampir selesai' })
+await meta.finish({ title: 'Selesai', body: 'ok' })
+```
+
+- `disabled: true` membuat langkah langsung `FINISHED`. Default `false` (`EXECUTING`). Bisa juga pakai `status: 'PLANNED'`.
+- `meta.step()` menandai langkah lama `FINISHED` lalu menambah langkah baru. Pakai `meta.step(x, { keepPrevious: true })` agar status langkah lama tidak berubah.
+- Opsi langkah lain: `reasoning`, `sections: [{ title, body }]`, `sources: [{ title, url }]`, `description`, `text`.
+- Tampilan di klien penerima ditentukan WhatsApp. Field ini aslinya untuk balasan bot AI, jadi hasil di akun biasa belum dijamin.
+
 ---
 
 ## Changelog
+
+### [2.2.4] - 2026-11-11
+
+#### Ditambahkan
+- `sock.sendMetaStep(jid, { title, body, disabled })` dengan `meta.step()`, `meta.finish()`, `meta.update()`: pesan indikator langkah memakai `proto.BotProgressIndicatorMetadata`.
 
 ### [2.2.3] - 2026-11-11
 

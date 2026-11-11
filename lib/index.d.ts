@@ -42,6 +42,34 @@ export interface PrivateRelayOptions {
     deviceMode?: "all" | "primary" | "secondary";
 }
 
+export interface MetaStepInput {
+    title?: string;
+    body?: string;
+    /** true: langkah langsung berstatus FINISHED. Default false (EXECUTING). */
+    disabled?: boolean;
+    /** nama atau nilai enum PlanningStepStatus: "PLANNED" | "EXECUTING" | "FINISHED" */
+    status?: "UNKNOWN" | "PLANNED" | "EXECUTING" | "FINISHED" | number;
+    reasoning?: boolean;
+    sections?: { title?: string; body?: string }[];
+    sources?: { title?: string; url?: string }[];
+    /** judul progres (progressDescription); default: title langkah pertama */
+    description?: string;
+    /** teks pesan; default: description */
+    text?: string;
+}
+
+export interface MetaStepHandle {
+    key: proto.IMessageKey;
+    message: proto.IWebMessageInfo;
+    steps: AnyObject[];
+    /** kirim ulang (edit) pesan dengan daftar langkah saat ini */
+    update(): Promise<proto.WebMessageInfo | undefined>;
+    /** langkah berikutnya; langkah lama jadi FINISHED kecuali { keepPrevious: true } */
+    step(next: MetaStepInput, options?: { keepPrevious?: boolean }): Promise<proto.WebMessageInfo | undefined>;
+    /** tandai semua langkah FINISHED, opsional tambah langkah penutup */
+    finish(last?: MetaStepInput): Promise<proto.WebMessageInfo | undefined>;
+}
+
 export interface WASocket {
     ev: {
         on(event: string, listener: (...args: any[]) => void): void;
@@ -56,6 +84,8 @@ export interface WASocket {
     relayMessage(jid: string, message: proto.IMessage, options?: AnyObject): Promise<string>;
     /** Relay proto.IMessage ke sebagian perangkat saja (port @levvsync/baileys). Mengembalikan message id. */
     sendPrivateRelay(jid: string, message: proto.IMessage, options?: PrivateRelayOptions): Promise<string>;
+    /** Pesan dengan indikator langkah/progres AI (proto.BotProgressIndicatorMetadata). */
+    sendMetaStep(jid: string, first: MetaStepInput, options?: { quoted?: proto.IWebMessageInfo; estimatedCompletionTime?: number }): Promise<MetaStepHandle>;
     readMessages(keys: proto.IMessageKey[]): Promise<void>;
     sendPresenceUpdate(type: string, toJid?: string): Promise<void>;
     updateMediaMessage(message: proto.IWebMessageInfo): Promise<proto.IWebMessageInfo>;

@@ -2,6 +2,11 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.4] - 2026-11-11
+
+### Ditambahkan
+- `sock.sendMetaStep(jid, { title, body, disabled })` dengan `meta.step()`, `meta.finish()`, `meta.update()`: pesan indikator langkah memakai `proto.BotProgressIndicatorMetadata`. Status langkah `PLANNED` / `EXECUTING` / `FINISHED`; opsi `reasoning`, `sections`, `sources`.
+
 ## [2.2.3] - 2026-11-11
 
 ### Ditambahkan
