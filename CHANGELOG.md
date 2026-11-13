@@ -2,6 +2,13 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.6] - 2026-11-13
+
+### Diperbaiki
+- `sendMetaStep` di 2.2.5 tidak tampil di penerima. Pesan tidak lagi dibungkus `botForwardedMessage`: sekarang `extendedTextMessage` dengan `contextInfo` forwarded AI bot (`forwardedAiBotMessageInfo`, `forwardOrigin: 4`) plus `botMetadata.progressIndicatorMetadata`.
+- Edit langkah dikirim lewat `sendMessage({ edit })` sehingga stanza membawa atribut `edit="1"`. Di 2.2.5 atribut ini tidak ada.
+- `meta.done('teks')`: `teks` jadi `progressDescription`; teks pesan tetap judul langkah terakhir.
+
 ## [2.2.5] - 2026-11-11
 
 ### Diperbaiki

@@ -214,10 +214,10 @@ await meta.step({ title: 'Langkah 2', body: 'hampir selesai' })
 await meta.done('selesai')
 ```
 
-Pesan dikirim seperti balasan bot AI (dibungkus `botForwardedMessage`, ada tombol "Lihat perincian"). Teks pesan adalah judul langkah terakhir; `done('teks')` mengganti teks pesan akhir.
+Pesan dikirim sebagai teks dengan tanda forwarded AI bot (`forwardedAiBotMessageInfo`), dengan tombol "Lihat perincian" untuk daftar Steps. Teks pesan adalah judul langkah terakhir. Langkah baru dikirim sebagai edit pesan biasa (atribut `edit="1"`).
 
 - `disabled: true` membuat langkah langsung `FINISHED`. Default `false` (`EXECUTING`). Bisa juga pakai `status: 'PLANNED'`.
-- `meta.done(teks)` menandai semua langkah `FINISHED`. Objek `meta.done({ title, body })` menambah langkah penutup. `meta.finish` sama dengan `done`.
+- `meta.done(teks)` menandai semua langkah `FINISHED`; `teks` jadi `progressDescription`, teks pesan tetap judul langkah terakhir. Objek `meta.done({ title, body })` menambah langkah penutup. `meta.finish` sama dengan `done`.
 - `meta.step()` menandai langkah lama `FINISHED` lalu menambah langkah baru. Pakai `meta.step(x, { keepPrevious: true })` agar status langkah lama tidak berubah.
 - Opsi langkah lain: `reasoning`, `sections: [{ title, body }]`, `sources: [{ title, url }]`, `description`, `text`.
 - Tampilan di klien penerima ditentukan WhatsApp. Field ini aslinya untuk balasan bot AI, jadi hasil di akun biasa belum dijamin.
@@ -225,6 +225,13 @@ Pesan dikirim seperti balasan bot AI (dibungkus `botForwardedMessage`, ada tombo
 ---
 
 ## Changelog
+
+### [2.2.6] - 2026-11-13
+
+#### Diperbaiki
+- `sendMetaStep` di 2.2.5 tidak tampil di penerima. Pesan tidak lagi dibungkus `botForwardedMessage`: sekarang `extendedTextMessage` dengan `contextInfo` forwarded AI bot (`forwardedAiBotMessageInfo`, `forwardOrigin: 4`) plus `botMetadata.progressIndicatorMetadata`.
+- Edit langkah dikirim lewat `sendMessage({ edit })` sehingga stanza membawa atribut `edit="1"`. Di 2.2.5 atribut ini tidak ada.
+- `meta.done('teks')`: `teks` jadi `progressDescription`; teks pesan tetap judul langkah terakhir.
 
 ### [2.2.5] - 2026-11-11
 

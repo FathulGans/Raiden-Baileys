@@ -73,7 +73,7 @@ export interface MetaStepHandle {
     update(): Promise<MetaStepEditResult>;
     /** langkah berikutnya; langkah lama jadi FINISHED kecuali { keepPrevious: true } */
     step(next: MetaStepInput, options?: { keepPrevious?: boolean }): Promise<MetaStepEditResult>;
-    /** semua langkah jadi FINISHED. String: teks pesan akhir. Objek: langkah penutup (title/body/text). */
+    /** semua langkah jadi FINISHED. String: jadi progressDescription. Objek: langkah penutup (title/body/text). */
     done(last?: string | MetaStepInput): Promise<MetaStepEditResult>;
     /** alias done */
     finish(last?: string | MetaStepInput): Promise<MetaStepEditResult>;
