@@ -214,7 +214,7 @@ await meta.step({ title: 'Langkah 2', body: 'hampir selesai' })
 await meta.done('selesai')
 ```
 
-Pesan dikirim sebagai teks dengan tanda forwarded AI bot (`forwardedAiBotMessageInfo`), dengan tombol "Lihat perincian" untuk daftar Steps. Teks pesan adalah judul langkah terakhir. Langkah baru dikirim sebagai edit pesan biasa (atribut `edit="1"`).
+Pesan dikirim dalam format balasan Meta AI: `richResponseMessage` dibungkus `botForwardedMessage`, dengan `botMetadata.progressIndicatorMetadata`, sehingga muncul tombol "Lihat perincian" untuk daftar Steps. Teks pesan adalah judul langkah terakhir. Langkah baru dikirim sebagai edit yang juga dibungkus `botForwardedMessage`.
 
 - `disabled: true` membuat langkah langsung `FINISHED`. Default `false` (`EXECUTING`). Bisa juga pakai `status: 'PLANNED'`.
 - `meta.done(teks)` menandai semua langkah `FINISHED`; `teks` jadi `progressDescription`, teks pesan tetap judul langkah terakhir. Objek `meta.done({ title, body })` menambah langkah penutup. `meta.finish` sama dengan `done`.
@@ -225,6 +225,12 @@ Pesan dikirim sebagai teks dengan tanda forwarded AI bot (`forwardedAiBotMessage
 ---
 
 ## Changelog
+
+### [2.2.7] - 2026-11-13
+
+#### Diperbaiki
+- `sendMetaStep`: di 2.2.6 pesan tampil sebagai teks "Diteruskan" tanpa tombol "Lihat perincian". Isi pesan sekarang `richResponseMessage` dibungkus `botForwardedMessage` (format balasan Meta AI), plus `botMetadata.progressIndicatorMetadata`.
+- Edit langkah dikirim lewat `relayMessage` dengan bungkus `botForwardedMessage` (`protocolMessage` tipe `MESSAGE_EDIT`), sama seperti edit richMessage.
 
 ### [2.2.6] - 2026-11-13
 

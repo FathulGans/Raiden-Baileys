@@ -2,6 +2,12 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.7] - 2026-11-13
+
+### Diperbaiki
+- `sendMetaStep`: di 2.2.6 pesan tampil sebagai teks "Diteruskan" tanpa tombol "Lihat perincian". Isi pesan sekarang `richResponseMessage` dibungkus `botForwardedMessage` (format balasan Meta AI), plus `botMetadata.progressIndicatorMetadata`.
+- Edit langkah dikirim lewat `relayMessage` dengan bungkus `botForwardedMessage` (`protocolMessage` tipe `MESSAGE_EDIT`), sama seperti edit richMessage.
+
 ## [2.2.6] - 2026-11-13
 
 ### Diperbaiki
