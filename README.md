@@ -222,9 +222,47 @@ Pesan dikirim dalam format balasan Meta AI: `richResponseMessage` dibungkus `bot
 - Opsi langkah lain: `reasoning`, `sections: [{ title, body }]`, `sources: [{ title, url }]`, `description`, `text`.
 - Tampilan di klien penerima ditentukan WhatsApp. Field ini aslinya untuk balasan bot AI, jadi hasil di akun biasa belum dijamin.
 
+### Status Saluran (sendNewsletterStatus)
+
+Posting status di saluran WhatsApp (bukan post biasa). Bot harus admin saluran, dan saluran harus sudah punya fitur status dari WhatsApp. Jika tidak, server menolak dengan error `403` / `not-authorized`.
+
+```js
+const jid = '120363xxxxxxxxxx@newsletter'
+
+// teks
+const st = await sock.sendNewsletterStatus(jid, { text: 'Halo pengikut!' })
+console.log(st.key.id, st.newsletterStatusServerId)
+
+// gambar / video / audio
+await sock.sendNewsletterStatus(jid, { image: { url: './foto.jpg' }, caption: 'Info terbaru' })
+await sock.sendNewsletterStatus(jid, { video: buffer, caption: 'Video' })
+await sock.sendNewsletterStatus(jid, { audio: buffer, mimetype: 'audio/ogg; codecs=opus', ptt: true })
+
+// reaksi ke status (serverId dari hasil kirim atau getNewsletterStatuses); tanpa emoji = hapus reaksi
+await sock.sendNewsletterStatusReaction(jid, st.newsletterStatusServerId, '🔥')
+
+// hapus status
+await sock.revokeNewsletterStatus(jid, st.key.id)
+
+// daftar status dan pembaruan (views, reaksi)
+const { statuses } = await sock.getNewsletterStatuses(jid, { count: 20 })
+const updates = await sock.getNewsletterStatusUpdates(jid, { count: 20 })
+```
+
+- Isi yang didukung: teks, gambar, video, gif, audio. Dokumen dan stiker ditolak.
+- WhatsApp Web sendiri hanya memposting status gambar dan video; audio dan gif bisa ditolak server.
+- Upload media otomatis memakai jalur upload saluran. Hasil kirim berisi `newsletterStatusServerId` dan `newsletterStatusAck`.
+- Opsi: `ackTimeoutMs` (default 20000), `resolveServerId: false`, `statusAttribution: false`, `mediaId` (handle media yang sudah diunggah).
+
 ---
 
 ## Changelog
+
+### [2.2.8] - 2026-11-20
+
+#### Ditambahkan
+- WAProto diperbarui ke **WhatsApp 2.3000.1055451535** (sebelumnya 2.3000.1054022738): 7 tipe baru, 21 field baru, 7 nilai enum baru. Contoh: `StatusPixKey`, `Message.ProtocolMessage.MessageEditDisplayType`, `PollAdditionalMetadata.PollOptionReplayEntry`, `DeviceCapabilities.RecentConversationsOnDemand`, field `Message.DocumentMessage.qrUrl`, `PollCreationMessage.Option.optionDatetime`, `DeviceProps.deviceName`, enum `WebMessageInfo.StubType.POLL_OPTION_ADDED` / `GROUP_CUSTOM_REACTIONS`. Tidak ada yang dihapus.
+- Status saluran: `sock.sendNewsletterStatus`, `sendNewsletterStatusReaction`, `revokeNewsletterStatus`, `getNewsletterStatuses`, `getNewsletterStatusUpdates`, plus helper `buildNewsletterStatusNode`, `parseNewsletterStatusAck`, `toNewsletterServerId`, dan lain-lain dari `Utils`.
 
 ### [2.2.7] - 2026-11-13
 

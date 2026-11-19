@@ -58,6 +58,73 @@ export interface MetaStepInput {
     text?: string;
 }
 
+/** Opsi sendNewsletterStatus. Sisa properti diteruskan ke generateWAMessage. */
+export interface NewsletterStatusOptions {
+    /** pakai handle media yang sudah diunggah (lewati upload) */
+    mediaId?: string;
+    mediaHandle?: string;
+    parentServerId?: number | string;
+    responseServerId?: number | string;
+    interactionType?: "question" | "question_response" | "question_reshare";
+    aiContent?: boolean;
+    /** tambah contextInfo.statusAttributions NEWSLETTER_STATUS (default true) */
+    statusAttribution?: boolean;
+    messageId?: string;
+    /** default 20000 */
+    ackTimeoutMs?: number;
+    /** false: jangan tunggu server_id dari <status> (default menunggu) */
+    resolveServerId?: boolean;
+    /** default 8000 */
+    serverIdTimeoutMs?: number;
+    [key: string]: any;
+}
+export interface NewsletterStatusAck {
+    class?: string;
+    from?: string;
+    id?: string;
+    t?: number;
+    serverId?: number;
+    edit?: string;
+    error?: string;
+    applicationError?: number;
+    backoff?: number;
+    node: any;
+}
+export interface NewsletterStatusItem {
+    id?: string;
+    serverId?: number;
+    t?: number;
+    isSender: boolean;
+    type?: string;
+    edit?: string;
+    mediaType?: string;
+    interactionType?: string;
+    reaction?: string;
+    adminProfile?: { id?: string; name?: string; pictureId?: string; pictureDirectPath?: string };
+    paidPartnership: boolean;
+    aiContent: boolean;
+    editTimestamp?: number;
+    originalTimestamp?: number;
+    reactionCounts?: { code?: string; count?: number }[];
+    viewsCount?: number;
+    responsesCount?: number;
+    message?: proto.Message;
+    node: any;
+}
+export interface NewsletterStatusList {
+    jid?: string;
+    t?: number;
+    statuses: NewsletterStatusItem[];
+}
+export interface NewsletterStatusSendResult {
+    key: proto.IMessageKey;
+    status: number;
+    newsletterStatusServerId?: number;
+    newsletterStatusAck: NewsletterStatusAck;
+    newsletterStatusResponse: any;
+    [key: string]: any;
+}
+
 export interface MetaStepEditResult {
     key: proto.IMessageKey;
     /** id pesan edit yang dikirim */
@@ -95,6 +162,14 @@ export interface WASocket {
     sendPrivateRelay(jid: string, message: proto.IMessage, options?: PrivateRelayOptions): Promise<string>;
     /** Pesan dengan indikator langkah/progres AI (proto.BotProgressIndicatorMetadata). */
     sendMetaStep(jid: string, first: MetaStepInput, options?: { quoted?: proto.IWebMessageInfo; estimatedCompletionTime?: number }): Promise<MetaStepHandle>;
+    /** Kirim status saluran (teks, gambar, video, gif, audio). Bot harus admin saluran yang punya fitur status. */
+    sendNewsletterStatus(jid: string, content: AnyObject, options?: NewsletterStatusOptions): Promise<NewsletterStatusSendResult>;
+    /** Reaksi ke status saluran; reaction kosong/undefined = hapus reaksi. */
+    sendNewsletterStatusReaction(jid: string, parentServerId: number | string, reaction?: string, options?: { messageId?: string; ackTimeoutMs?: number }): Promise<NewsletterStatusSendResult>;
+    /** Hapus status saluran (id = key.id hasil sendNewsletterStatus). */
+    revokeNewsletterStatus(jid: string, statusId: string, options?: { ackTimeoutMs?: number }): Promise<NewsletterStatusSendResult>;
+    getNewsletterStatuses(jid: string, options?: { count?: number; before?: number | string; after?: number | string; viewRole?: string }): Promise<NewsletterStatusList>;
+    getNewsletterStatusUpdates(jid: string, options?: { count?: number; since?: number | string; before?: number | string; after?: number | string }): Promise<NewsletterStatusList>;
     readMessages(keys: proto.IMessageKey[]): Promise<void>;
     sendPresenceUpdate(type: string, toJid?: string): Promise<void>;
     updateMediaMessage(message: proto.IWebMessageInfo): Promise<proto.IWebMessageInfo>;

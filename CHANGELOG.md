@@ -2,6 +2,17 @@
 
 Semua perubahan penting pada **Raiden-Baileys** dicatat di sini.
 
+## [2.2.8] - 2026-11-20
+
+### Ditambahkan
+- WAProto diperbarui ke **WhatsApp 2.3000.1055451535** (sebelumnya 2.3000.1054022738): 7 tipe baru, 21 field baru, 7 nilai enum baru. Contoh: `StatusPixKey`, `Message.ProtocolMessage.MessageEditDisplayType`, `PollAdditionalMetadata.PollOptionReplayEntry`, `DeviceCapabilities.RecentConversationsOnDemand`, field `Message.DocumentMessage.qrUrl`, `PollCreationMessage.Option.optionDatetime`, `DeviceProps.deviceName`, enum `WebMessageInfo.StubType.POLL_OPTION_ADDED` / `GROUP_CUSTOM_REACTIONS`. Tidak ada yang dihapus.
+- Status saluran: `sock.sendNewsletterStatus(jid, content, options)` (teks, gambar, video, gif, audio), `sendNewsletterStatusReaction`, `revokeNewsletterStatus`, `getNewsletterStatuses`, `getNewsletterStatusUpdates`.
+- Helper di `Utils`: `buildNewsletterStatusNode`, `buildNewsletterStatusReactionNode`, `buildNewsletterStatusRevokeNode`, `parseNewsletterStatusAck`, `parseNewsletterStatusesResponse`, `toNewsletterServerId`, `withNewsletterStatusAttribution`, `getNewsletterStatusMediaType`.
+
+### Catatan
+- Fitur lain tidak berubah. `sendMessage` ke saluran tetap seperti sebelumnya.
+- `ChatSolidColorWallpaper.backgroundLightArgb` / `backgroundDarkArgb` tetap tidak ditambahkan: nomor field 1 dan 2 sudah dipakai `colorLight` / `colorDark`.
+
 ## [2.2.7] - 2026-11-13
 
 ### Diperbaiki
